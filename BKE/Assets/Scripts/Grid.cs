@@ -31,5 +31,10 @@ namespace BKE
         {
             return grid[x, y] == 0 ? true : false;
         }
+
+        public Vector2Int GetSize()
+        {
+            return new Vector2Int(width, height);
+        }
     }
 }
