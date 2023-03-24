@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace BKE
 {
+    /*
+        Currently only supports even grid sizes. 3x4 will not work e.g.
+    */
     public class Grid
     {
         private int width;
@@ -27,9 +30,9 @@ namespace BKE
             grid[x, y] = value;
         }
 
-        public bool PossibleMove(int x, int y)
+        public bool PossibleMove(Vector2Int coordinates)
         {
-            return grid[x, y] == 0 ? true : false;
+            return grid[coordinates.x, coordinates.y] == 0 ? true : false;
         }
 
         public Vector2Int GetSize()
@@ -39,15 +42,7 @@ namespace BKE
 
         public bool CheckWin()
         {
-            if (CheckHorizontal())
-            {
-                return true;
-            }
-            if (CheckVertical())
-            {
-                return true;
-            }
-            if (CheckDiagonal())
+            if (CheckHorizontal() || CheckVertical() || CheckDiagonal())
             {
                 return true;
             }
@@ -80,7 +75,51 @@ namespace BKE
 
         private bool CheckDiagonal()
         {
+            if (CheckLeftDiagonal() || CheckRightDiagonal())
+            {
+                return true;
+            }
             return false;
+        }
+
+        private bool CheckLeftDiagonal()
+        {
+            if (grid[0,0] == 0)
+            {
+                return false;
+            }
+
+            int player = grid[0,0];
+            for (int i = 0; i < width; i++)
+            {
+                if (grid[i, i] != player)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool CheckRightDiagonal()
+        {
+            if (grid[0, 2] == 0)
+            {
+                return false;
+            }
+
+            int player = grid[2, 2];
+            for (int x = 2; x > -1; x--)
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    if (grid[x, y] != player)
+                    {
+                        return false;
+                    }
+
+                }
+            }
+            return true;
         }
     }
 }

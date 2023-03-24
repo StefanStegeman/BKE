@@ -6,41 +6,65 @@ using UnityEngine.EventSystems;
 
 namespace BKE
 {
-    public class GridManager : MonoBehaviour, IPointerDownHandler
+    public class GridManager : MonoBehaviour//, IPointerDownHandler
     {
+        #region Shape properties
         [SerializeField] 
         private GameObject playerOne;
-
         [SerializeField] 
         private GameObject playerTwo;
 
-        [SerializeField]
-        private GameObject objectsParent;
+        private Mesh meshOne;
+        private Mesh meshTwo;
+        private Material materialOne;
+        private Material materialTwo;
+        #endregion
 
+        #region Grid
         [SerializeField]
         private Vector2Int size;
+        [SerializeField]
+        private List<ShapeHolder> shapeHolders;
+
+        private Grid grid;
+        #endregion
 
         private int currentPlayer;
-
-        public Grid grid;
 
         private void Start()
         {
             grid = new Grid(size.x, size.y);
             currentPlayer = 1;
+            InitializeShapeProperties();
         }
 
-        public void ApplyMove(Vector2Int coordinates, int player)
+        private void InitializeShapeProperties()
         {
-            grid.SetElement(coordinates.x, coordinates.y, player);
-            InstantiateShape(coordinates, player);
+            meshOne = playerOne.GetComponent<MeshFilter>().sharedMesh;
+            materialOne = playerOne.GetComponent<Renderer>().sharedMaterial;
+            meshTwo = playerTwo.GetComponent<MeshFilter>().sharedMesh;
+            materialTwo = playerTwo.GetComponent<Renderer>().sharedMaterial;
         }
 
-        private GameObject SelectShape()
+        private int CoordinatesToIndex(Vector2Int coordinates)
         {
-            return currentPlayer == 1? GameObject.Instantiate(playerOne) : GameObject.Instantiate(playerTwo);
+            return grid.GetSize().x * coordinates.x + coordinates.y;
         }
 
+        private void ChangeShapeProperties(Vector2Int coordinates)
+        {
+            if (currentPlayer == 1)
+            {
+                shapeHolders[CoordinatesToIndex(coordinates)].SwapMesh(meshOne);
+                shapeHolders[CoordinatesToIndex(coordinates)].SwapMaterial(materialOne);
+            }
+            else
+            {
+                shapeHolders[CoordinatesToIndex(coordinates)].SwapMesh(meshTwo);
+                shapeHolders[CoordinatesToIndex(coordinates)].SwapMaterial(materialTwo);
+            }
+        }
+ 
         private void SwitchPlayer()
         {
             if (currentPlayer == 1)
@@ -53,60 +77,34 @@ namespace BKE
             }
         }
 
-        private void InstantiateShape(Vector2Int coordinates, int player)
+        private void CheckWin()
         {
-            GameObject block = SelectShape();
-            float newX = block.transform.position.x + 4 * coordinates.x;
-            float newY = block.transform.position.y + 4 * coordinates.y;
-            block.transform.SetParent(objectsParent.GetComponent<Transform>());
-            block.transform.position = new Vector3(newX, newY, block.transform.position.z);
+            if (grid.CheckWin())
+            {
+                Debug.Log(string.Format("Player {0} has won!", currentPlayer));
+                ResetGrid();
+            }
+            else
+            {
+                SwitchPlayer();
+            }
         }
 
-        public int DetermineAxisIndex(float screenSize, float coordinate, int gridSize)
+        public void ApplyMove(Vector2Int coordinates)
         {
-            if (coordinate < screenSize / gridSize)
+            if (grid.PossibleMove(coordinates))
             {
-                return 0;
-            }
-            if (coordinate > screenSize / gridSize * 2)
-            {
-                return 2;
-            }
-            return 1;
-        }
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            Vector2 mousePosition = new Vector2(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue());
-            Vector2Int gridSize = grid.GetSize();
-            int xAxis = DetermineAxisIndex(Screen.width, mousePosition.x, gridSize.x);
-            int yAxis = DetermineAxisIndex(Screen.height, mousePosition.y, gridSize.y);
-            Vector2Int coordinates = new Vector2Int(xAxis, yAxis);
-            
-            if (grid.PossibleMove(coordinates.x, coordinates.y))
-            {
-                ApplyMove(coordinates, currentPlayer);
-                if (grid.CheckWin())
-                {
-                    Debug.Log(string.Format("Player {0} has won!", currentPlayer));
-                    ResetGrid();
-                }
-                else
-                {
-                    SwitchPlayer();
-                }
+                grid.SetElement(coordinates.x, coordinates.y, currentPlayer);
+                ChangeShapeProperties(coordinates);
+                CheckWin();
             }
         }
 
         public void ResetGrid()
         {
             grid = new Grid(size.x, size.y);
-            foreach (Transform child in objectsParent.transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-            // Might be nice to add a rule to where the loser may start the next game
-            currentPlayer = 1;
+            shapeHolders.ForEach(holder => holder.gameObject.GetComponent<MeshFilter>().sharedMesh = null);
+            currentPlayer = 1; // Might be nice to add a rule to where the loser may start the next game
         }
     }
 }
