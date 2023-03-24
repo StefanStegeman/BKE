@@ -38,6 +38,9 @@ namespace BKE
             InitializeShapeProperties();
         }
 
+        /// <summary>
+        /// Initializing all shape properties.
+        /// </summary>
         private void InitializeShapeProperties()
         {
             meshOne = playerOne.GetComponent<MeshFilter>().sharedMesh;
@@ -46,11 +49,18 @@ namespace BKE
             materialTwo = playerTwo.GetComponent<Renderer>().sharedMaterial;
         }
 
+        /// <summary>
+        /// Convert Vector2Int to int.
+        /// This allows to access the shapeHolders which are ordered by coordinates.
+        /// </summary>
         private int CoordinatesToIndex(Vector2Int coordinates)
         {
             return grid.GetSize().x * coordinates.x + coordinates.y;
         }
 
+        /// <summary>
+        /// Change the mesh and material of the shapeholder.
+        /// </summary>
         private void ChangeShapeProperties(Vector2Int coordinates)
         {
             if (currentPlayer == 1)
@@ -65,6 +75,9 @@ namespace BKE
             }
         }
  
+        /// <summary>
+        /// Switch currentPlayer variable according to the player whom's turn it is.
+        /// </summary>
         private void SwitchPlayer()
         {
             if (currentPlayer == 1)
@@ -77,19 +90,30 @@ namespace BKE
             }
         }
 
+        /// <summary>
+        /// Handle wins, non-wins and draws.
+        /// </summary>
         private void CheckWin()
         {
             if (grid.CheckWin())
             {
                 Debug.Log(string.Format("Player {0} has won!", currentPlayer));
-                ResetGrid();
+                GameManager.Instance.GameOver();
             }
-            else
+            else if (grid.AvailableMoves())
             {
                 SwitchPlayer();
             }
+            else
+            {
+                Debug.Log("It's a draw!");
+                GameManager.Instance.GameOver();
+            }
         }
 
+        /// <summary>
+        /// Applies move if, and only if the move is possible.
+        /// </summary>
         public void ApplyMove(Vector2Int coordinates)
         {
             if (grid.PossibleMove(coordinates))
@@ -100,6 +124,9 @@ namespace BKE
             }
         }
 
+        /// <summary>
+        /// Resets all shapeHolders to get a clean grid.
+        /// </summary>
         public void ResetGrid()
         {
             grid = new Grid(size.x, size.y);

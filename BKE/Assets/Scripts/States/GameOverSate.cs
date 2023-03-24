@@ -2,23 +2,31 @@ using UnityEngine;
 
 namespace BKE
 {
-    public class IdleState : State
+    public class GameOverState : State
     {
         private GridManager gridManager;
 
-        public IdleState(GridManager gridManager, CanvasManager canvasManager) : base(canvasManager)
+        public GameOverState(GridManager gridManager, CanvasManager canvasManager) : base(canvasManager)
         {
             this.gridManager = gridManager;
         }
 
         /// <summary>
-        /// Switches the UIElement to the proper UIType, and resets the grid on entering the state.
+        /// Switches the UIElement to the proper UIType on entering the state.
         /// </summary>
         public override void Enter()
         {
             base.Enter();
+            canvasManager.SwitchUIElement(UIType.GameOver);
+        }
+
+        /// <summary>
+        /// Resets the grid on exiting the state.
+        /// </summary>
+        public override void Exit()
+        {
+            base.Exit();
             gridManager.ResetGrid();
-            canvasManager.SwitchUIElement(UIType.Idle);
         }
 
         /// <summary>
@@ -26,7 +34,7 @@ namespace BKE
         /// </summary>
         public override string ToString()
         {
-            return "Idle";
+            return "Game Over";
         }
     }
 }

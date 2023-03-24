@@ -8,7 +8,8 @@ namespace BKE
         Idle,
         Playing, 
         Paused,
-        Settings
+        Settings,
+        GameOver
     }
 
     public class CanvasManager : MonoBehaviour
@@ -25,6 +26,9 @@ namespace BKE
             SwitchUIElement(UIType.Idle);
         }
 
+        /// <summary>
+        /// Switches the current UIElement.
+        /// </summary>
         public void SwitchUIElement(UIType type)
         {
             if (currentUI != null)
@@ -40,6 +44,9 @@ namespace BKE
             }
         }
 
+        /// <summary>
+        /// Reverts to the previous UIElement.
+        /// </summary>
         public void RevertUIElement(UIType newUI)
         {
             currentUI.gameObject.SetActive(false);

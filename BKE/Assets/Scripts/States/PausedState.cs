@@ -6,22 +6,18 @@ namespace BKE
     {
         public PausedState(CanvasManager canvasManager) : base(canvasManager){}
 
+        /// <summary>
+        /// Switches the UIElement to the proper UIType on entering the state.
+        /// </summary>
         public override void Enter()
         {
             base.Enter();
             canvasManager.SwitchUIElement(UIType.Paused);
         }
 
-        public override void Update()
-        {
-            base.Update();
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-        }
-
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
         public override string ToString()
         {
             return "Paused";

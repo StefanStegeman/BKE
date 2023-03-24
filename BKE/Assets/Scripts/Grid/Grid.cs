@@ -12,34 +12,68 @@ namespace BKE
         private int width;
         private int height;
         private int[,] grid;
+        private int moves;
 
         public Grid(int width, int height)
         {
             this.width = width;
             this.height = height;
             grid = new int[width, height];
+            ResetMoves();
         }
 
+        /// <summary>
+        /// Reset the move counter.
+        /// </summary>
+        public void ResetMoves()
+        {
+            moves = 0;
+        }
+
+        /// <summary>
+        /// Checks whether there are still moves available.
+        /// </summary>
+        public bool AvailableMoves()
+        {
+            return moves == grid.Length ? false : true;
+        }
+
+        /// <summary>
+        /// Gets player from the grid.
+        /// </summary>
         public int GetElement(int x, int y)
         {
             return grid[x, y];
         }
 
+        /// <summary>
+        /// Sets player in the grid.
+        /// </summary>
         public void SetElement(int x, int y, int value)
         {
+            moves++;
             grid[x, y] = value;
         }
 
+        /// <summary>
+        /// Checks whether coordinate is free or already occupied by a player.
+        /// </summary>
         public bool PossibleMove(Vector2Int coordinates)
         {
             return grid[coordinates.x, coordinates.y] == 0 ? true : false;
         }
 
+        /// <summary>
+        /// Returns size of the grid.
+        /// </summary>
         public Vector2Int GetSize()
         {
             return new Vector2Int(width, height);
         }
 
+        /// <summary>
+        /// Checks whether any win conditions are true.
+        /// </summary>
         public bool CheckWin()
         {
             if (CheckHorizontal() || CheckVertical() || CheckDiagonal())
@@ -49,6 +83,9 @@ namespace BKE
             return false;
         }
 
+        /// <summary>
+        /// Checks whether a player wins vertically.
+        /// </summary>
         private bool CheckVertical()
         {
             for (int x = 0; x < width; x++)
@@ -61,6 +98,9 @@ namespace BKE
             return false;
         }
 
+        /// <summary>
+        /// Checks whether a player wins horizontally.
+        /// </summary>
         private bool CheckHorizontal()
         {
             for (int y = 0; y < width; y++)
@@ -73,6 +113,9 @@ namespace BKE
             return false;
         }
 
+        /// <summary>
+        /// Checks whether a player wins diagonally.
+        /// </summary>
         private bool CheckDiagonal()
         {
             if (CheckLeftDiagonal() || CheckRightDiagonal())
@@ -82,6 +125,9 @@ namespace BKE
             return false;
         }
 
+        /// <summary>
+        /// Checks whether a player wins on the left diagonal.
+        /// </summary>
         private bool CheckLeftDiagonal()
         {
             if (grid[0,0] == 0)
@@ -100,6 +146,9 @@ namespace BKE
             return true;
         }
 
+        /// <summary>
+        /// Checks whether a player wins on the right diagonal.
+        /// </summary>
         private bool CheckRightDiagonal()
         {
             if (grid[0, 2] == 0)
@@ -107,16 +156,12 @@ namespace BKE
                 return false;
             }
 
-            int player = grid[2, 2];
-            for (int x = 2; x > -1; x--)
+            int player = grid[0, 2];
+            for (int i = 0; i < width; i++)
             {
-                for (int y = 0; y < 2; y++)
+                if (grid[i, 2-i] != player)
                 {
-                    if (grid[x, y] != player)
-                    {
-                        return false;
-                    }
-
+                    return false;
                 }
             }
             return true;

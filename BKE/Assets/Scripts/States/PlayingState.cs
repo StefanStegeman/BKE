@@ -14,6 +14,9 @@ namespace BKE
             currentPlayer = 1;
         } 
 
+        /// <summary>
+        /// Enables the gridManager script, and switches to the proper UIType on entering the state.
+        /// </summary>
         public override void Enter()
         {
             base.Enter();
@@ -21,17 +24,18 @@ namespace BKE
             canvasManager.SwitchUIElement(UIType.Playing);
         }
 
-        public override void Update()
-        {
-            base.Update();
-        }
-
+        /// <summary>
+        /// Disables the gridManager script on exiting the state.
+        /// </summary>
         public override void Exit()
         {
             base.Exit();
             gridManager.enabled = false;
         }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
         public override string ToString()
         {
             return "Playing";
