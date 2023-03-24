@@ -20,7 +20,7 @@ namespace BKE
 
         private void Start()
         {
-            idleState = new IdleState(canvasManager);
+            idleState = new IdleState(gridManager, canvasManager);
             playingState = new PlayingState(gridManager, canvasManager);
             pausedState = new PausedState(canvasManager);
             ChangeState(idleState);

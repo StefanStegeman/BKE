@@ -13,13 +13,13 @@ namespace BKE
         
         public virtual void Enter()
         {
-            Debug.Log("Entered " + this.ToString());
+            // Debug.Log("Entered " + this.ToString());
         }
 
         public virtual void Update(){}
         public virtual void Exit()
         {
-            Debug.Log("Exited " + this.ToString());
+            // Debug.Log("Exited " + this.ToString());
         }
     }
 }

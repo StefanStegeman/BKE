@@ -4,11 +4,17 @@ namespace BKE
 {
     public class IdleState : State
     {
-        public IdleState(CanvasManager canvasManager) : base(canvasManager){}
+        private GridManager gridManager;
+        
+        public IdleState(GridManager gridManager, CanvasManager canvasManager) : base(canvasManager)
+        {
+            this.gridManager = gridManager;
+        } 
 
         public override void Enter()
         {
             base.Enter();
+            gridManager.ResetGrid();
             canvasManager.SwitchUIElement(UIType.Idle);
         }
 

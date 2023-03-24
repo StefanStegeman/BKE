@@ -2,17 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 namespace BKE
 {
-    public class GridManager : MonoBehaviour
+    public class GridManager : MonoBehaviour, IPointerDownHandler
     {
-        [SerializeField] private GameObject prefab;
+        [SerializeField] 
+        private GameObject prefab;
+
+        [SerializeField]
+        private GameObject objectsParent;
+
+        [SerializeField]
+        private Vector2Int size;
+
         public Grid grid;
 
         private void Start()
         {
-            grid = new Grid(3, 3);
+            grid = new Grid(size.x, size.y);
         }
 
         public void ApplyMove(Vector2Int coordinates, int player)
@@ -26,6 +35,7 @@ namespace BKE
             GameObject block = GameObject.Instantiate(prefab);
             float newX = block.transform.position.x + 4 * coordinates.x;
             float newY = block.transform.position.y + 4 * coordinates.y;
+            block.transform.SetParent(objectsParent.GetComponent<Transform>());
             block.transform.position = new Vector3(newX, newY, block.transform.position.z);
         }
 
@@ -40,6 +50,29 @@ namespace BKE
                 return 2;
             }
             return 1;
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            Vector2 mousePosition = new Vector2(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue());
+            Vector2Int gridSize = grid.GetSize();
+            int xAxis = DetermineAxisIndex(Screen.width, mousePosition.x, gridSize.x);
+            int yAxis = DetermineAxisIndex(Screen.height, mousePosition.y, gridSize.y);
+            Vector2Int coordinates = new Vector2Int(xAxis, yAxis);
+            
+            if (grid.PossibleMove(coordinates.x, coordinates.y))
+            {
+                ApplyMove(coordinates, -1);
+            }
+        }
+
+        public void ResetGrid()
+        {
+            grid = new Grid(size.x, size.y);
+            foreach (Transform child in objectsParent.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
         }
     }
 }

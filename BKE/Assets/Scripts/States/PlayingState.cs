@@ -6,17 +6,18 @@ namespace BKE
     public class PlayingState : State
     {
         private int currentPlayer;
-        private GridManager manager;
+        private GridManager gridManager;
 
-        public PlayingState(GridManager manager, CanvasManager canvasManager) : base(canvasManager)
+        public PlayingState(GridManager gridManager, CanvasManager canvasManager) : base(canvasManager)
         {
-            this.manager = manager;
+            this.gridManager = gridManager;
             currentPlayer = 1;
         } 
 
         public override void Enter()
         {
             base.Enter();
+            gridManager.enabled = true;
             canvasManager.SwitchUIElement(UIType.Playing);
         }
 
@@ -28,6 +29,7 @@ namespace BKE
         public override void Exit()
         {
             base.Exit();
+            gridManager.enabled = false;
         }
 
         public override string ToString()
