@@ -26,6 +26,11 @@ namespace BKE
             ChangeState(idleState);
         }
 
+        private void Update()
+        {
+            currentState.Update();
+        }
+
         public void ChangeState(State state)
         {
             if (currentState != null)

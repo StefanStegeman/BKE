@@ -2605,7 +2605,7 @@ GameObject:
   - component: {fileID: 1983716184}
   - component: {fileID: 1983716185}
   m_Layer: 0
-  m_Name: GameGrid
+  m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2623,7 +2623,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c62ecf3d20bb046a3a111ab79e63a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 8036111634136892551, guid: cc85b3f184ddc4a44ad3e931bb7e7b3e, type: 3}
+  playerOne: {fileID: 8036111634136892551, guid: cc85b3f184ddc4a44ad3e931bb7e7b3e, type: 3}
+  playerTwo: {fileID: 7582886178668867786, guid: 8662a4017fc922247acfefe8f53f97bc, type: 3}
   objectsParent: {fileID: 1879632535}
   size: {x: 3, y: 3}
 --- !u!4 &1983716183

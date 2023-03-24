@@ -36,5 +36,51 @@ namespace BKE
         {
             return new Vector2Int(width, height);
         }
+
+        public bool CheckWin()
+        {
+            if (CheckHorizontal())
+            {
+                return true;
+            }
+            if (CheckVertical())
+            {
+                return true;
+            }
+            if (CheckDiagonal())
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool CheckVertical()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (grid[x, 0] != 0 && grid[x, 0] == grid[x, 1] && grid[x, 0] == grid[x, 2])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CheckHorizontal()
+        {
+            for (int y = 0; y < width; y++)
+            {
+                if (grid[0, y] != 0 && grid[0, y] == grid[1, y] && grid[0, y] == grid[2, y])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CheckDiagonal()
+        {
+            return false;
+        }
     }
 }

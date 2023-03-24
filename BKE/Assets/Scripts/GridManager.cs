@@ -9,7 +9,10 @@ namespace BKE
     public class GridManager : MonoBehaviour, IPointerDownHandler
     {
         [SerializeField] 
-        private GameObject prefab;
+        private GameObject playerOne;
+
+        [SerializeField] 
+        private GameObject playerTwo;
 
         [SerializeField]
         private GameObject objectsParent;
@@ -17,11 +20,14 @@ namespace BKE
         [SerializeField]
         private Vector2Int size;
 
+        private int currentPlayer;
+
         public Grid grid;
 
         private void Start()
         {
             grid = new Grid(size.x, size.y);
+            currentPlayer = 1;
         }
 
         public void ApplyMove(Vector2Int coordinates, int player)
@@ -30,9 +36,26 @@ namespace BKE
             InstantiateShape(coordinates, player);
         }
 
+        private GameObject SelectShape()
+        {
+            return currentPlayer == 1? GameObject.Instantiate(playerOne) : GameObject.Instantiate(playerTwo);
+        }
+
+        private void SwitchPlayer()
+        {
+            if (currentPlayer == 1)
+            {
+                currentPlayer = 2;
+            }
+            else
+            {
+                currentPlayer = 1;
+            }
+        }
+
         private void InstantiateShape(Vector2Int coordinates, int player)
         {
-            GameObject block = GameObject.Instantiate(prefab);
+            GameObject block = SelectShape();
             float newX = block.transform.position.x + 4 * coordinates.x;
             float newY = block.transform.position.y + 4 * coordinates.y;
             block.transform.SetParent(objectsParent.GetComponent<Transform>());
@@ -62,7 +85,16 @@ namespace BKE
             
             if (grid.PossibleMove(coordinates.x, coordinates.y))
             {
-                ApplyMove(coordinates, -1);
+                ApplyMove(coordinates, currentPlayer);
+                if (grid.CheckWin())
+                {
+                    Debug.Log(string.Format("Player {0} has won!", currentPlayer));
+                    ResetGrid();
+                }
+                else
+                {
+                    SwitchPlayer();
+                }
             }
         }
 
@@ -73,6 +105,8 @@ namespace BKE
             {
                 GameObject.Destroy(child.gameObject);
             }
+            // Might be nice to add a rule to where the loser may start the next game
+            currentPlayer = 1;
         }
     }
 }
