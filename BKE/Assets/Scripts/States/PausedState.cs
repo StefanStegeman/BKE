@@ -2,14 +2,14 @@ using UnityEngine;
 
 namespace BKE
 {
-    public class IdleState : State
+    public class PausedState : State
     {
-        public IdleState(CanvasManager canvasManager) : base(canvasManager){}
+        public PausedState(CanvasManager canvasManager) : base(canvasManager){}
 
         public override void Enter()
         {
             base.Enter();
-            canvasManager.SwitchUIElement(UIType.Idle);
+            canvasManager.SwitchUIElement(UIType.Paused);
         }
 
         public override void Update()
@@ -24,7 +24,7 @@ namespace BKE
 
         public override string ToString()
         {
-            return "Idle";
+            return "Paused";
         }
     }
 }

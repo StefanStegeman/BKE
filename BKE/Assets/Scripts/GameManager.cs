@@ -8,15 +8,21 @@ namespace BKE
         private State currentState;
         private IdleState idleState;
         private PlayingState playingState;
+        private PausedState pausedState;
         #endregion
 
+        #region Managers
         [SerializeField]
         private GridManager gridManager;
+        [SerializeField]
+        private CanvasManager canvasManager;
+        #endregion
 
         private void Start()
         {
-            idleState = new IdleState(gridManager);
-            playingState = new PlayingState(gridManager);
+            idleState = new IdleState(canvasManager);
+            playingState = new PlayingState(gridManager, canvasManager);
+            pausedState = new PausedState(canvasManager);
             ChangeState(idleState);
         }
 
@@ -28,6 +34,21 @@ namespace BKE
             }
             currentState = state;
             state.Enter();
+        }
+
+        public void StartGame()
+        {
+            ChangeState(playingState);
+        }
+
+        public void PauseGame()
+        {
+            ChangeState(pausedState);
+        }
+
+        public void QuitGame()
+        {
+            ChangeState(idleState);
         }
     }
 }

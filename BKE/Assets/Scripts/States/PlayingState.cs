@@ -8,7 +8,7 @@ namespace BKE
         private int currentPlayer;
         private GridManager manager;
 
-        public PlayingState(GridManager manager) : base()
+        public PlayingState(GridManager manager, CanvasManager canvasManager) : base(canvasManager)
         {
             this.manager = manager;
             currentPlayer = 1;
@@ -17,6 +17,7 @@ namespace BKE
         public override void Enter()
         {
             base.Enter();
+            canvasManager.SwitchUIElement(UIType.Playing);
         }
 
         public override void Update()
