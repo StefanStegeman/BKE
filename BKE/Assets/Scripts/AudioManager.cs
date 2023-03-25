@@ -55,4 +55,12 @@ public class AudioManager : MonoBehaviour
     {
         sfxSource.Stop();
     }
+
+    /// <summary>
+    /// Mutes or unmutes the AudioSource.
+    /// </summary>
+    public void MuteAudioSource(AudioSource source)
+    {
+        source.mute = !source.mute;
+    }
 }
