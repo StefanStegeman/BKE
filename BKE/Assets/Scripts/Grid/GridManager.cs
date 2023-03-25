@@ -41,6 +41,10 @@ namespace BKE
         #endregion
 
         private int currentPlayer;
+        [SerializeField]
+        private AudioClip selectAudio;
+        [SerializeField]
+        private AudioClip errorAudio;
 
         private void Start()
         {
@@ -137,9 +141,14 @@ namespace BKE
         {
             if (grid.PossibleMove(coordinates))
             {
+                AudioManager.Instance.PlaySFX(selectAudio);
                 grid.SetElement(coordinates.x, coordinates.y, currentPlayer);
                 ChangeShapeProperties(coordinates);
                 CheckWin();
+            }
+            else
+            {
+                AudioManager.Instance.PlaySFX(errorAudio);
             }
         }
 
