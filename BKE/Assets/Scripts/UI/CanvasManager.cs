@@ -5,12 +5,13 @@ namespace BKE
 {
     public enum UIType
     {
-        Idle,
+        MainMenu,
+        SelectMenu,
         Playing, 
         Paused,
         Settings,
         GameOver
-    }
+    } 
 
     public class CanvasManager : MonoBehaviour
     {
@@ -23,7 +24,7 @@ namespace BKE
         private void Start()
         {
             uiElements.ForEach(element => element.gameObject.SetActive(false));
-            SwitchUIElement(UIType.Idle);
+            SwitchUIElement(UIType.MainMenu);
         }
 
         /// <summary>
@@ -52,6 +53,16 @@ namespace BKE
             currentUI.gameObject.SetActive(false);
             previousUI.gameObject.SetActive(true);
             (currentUI, previousUI) = (previousUI, currentUI);
+        }
+
+        public void SelectMenu(bool singlePlayer)
+        {
+            SwitchUIElement(UIType.SelectMenu);
+        }
+
+        public void SettingsMenu()
+        {
+            SwitchUIElement(UIType.Settings);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace BKE
         {
             base.Enter();
             gridManager.ResetGrid();
-            canvasManager.SwitchUIElement(UIType.Idle);
+            canvasManager.SwitchUIElement(UIType.MainMenu);
         }
 
         /// <summary>
