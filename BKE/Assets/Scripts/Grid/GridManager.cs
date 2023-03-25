@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using TMPro;
 
 namespace BKE
 {
@@ -29,6 +30,16 @@ namespace BKE
         private Grid grid;
         #endregion
 
+        #region UI
+        [SerializeField]
+        private TMP_Text playerText;
+        [SerializeField]
+        private TMP_Text resultText;
+        
+        private Color colorOne;
+        private Color colorTwo;
+        #endregion
+
         private int currentPlayer;
 
         private void Start()
@@ -36,6 +47,9 @@ namespace BKE
             grid = new Grid(size.x, size.y);
             currentPlayer = 1;
             InitializeShapeProperties();
+            playerText.text = "Player 1";
+            colorOne = materialOne.GetColor("_Color");
+            colorTwo = materialTwo.GetColor("_Color");
         }
 
         /// <summary>
@@ -83,11 +97,14 @@ namespace BKE
             if (currentPlayer == 1)
             {
                 currentPlayer = 2;
+                playerText.color = colorTwo;
             }
             else
             {
                 currentPlayer = 1;
+                playerText.color = colorOne;
             }
+            playerText.text = string.Format("Player {0}", currentPlayer);
         }
 
         /// <summary>
@@ -97,6 +114,7 @@ namespace BKE
         {
             if (grid.CheckWin())
             {
+                resultText.text = string.Format("Player {0} has won!", currentPlayer);
                 Debug.Log(string.Format("Player {0} has won!", currentPlayer));
                 GameManager.Instance.GameOver();
             }
@@ -106,6 +124,7 @@ namespace BKE
             }
             else
             {
+                resultText.text = "It's a draw!";
                 Debug.Log("It's a draw!");
                 GameManager.Instance.GameOver();
             }
