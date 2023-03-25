@@ -104,7 +104,7 @@ namespace BKE
             if (currentPlayer == 1)
             {
                 currentPlayer = 2;
-                tester.MakeMove(grid, previousMove);
+                StartCoroutine(ApplyAgentMove(tester.MakeMove(grid, previousMove)));
             }
             else
             {
@@ -156,6 +156,19 @@ namespace BKE
             {
                 AudioManager.Instance.PlaySFX(errorAudio);
             }
+        }
+
+        private IEnumerator ApplyAgentMove(Vector2Int coordinates)
+        {
+            AudioManager.Instance.PlaySFX(selectAudio);
+            grid.SetElement(coordinates.x, coordinates.y, currentPlayer);
+            previousMove = coordinates;
+            yield return new WaitForSeconds(1);
+            ChangeShapeProperties(coordinates);
+            CheckWin();
+            tester.LastMove(coordinates, currentPlayer - 1);
+            tester.ShowGrid(grid);
+            tester.ValidMoves(grid.GetValidMoves());
         }
 
         /// <summary>

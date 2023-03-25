@@ -13,9 +13,11 @@ namespace BKE
         private Agent agent;
 
         
-        public void MakeMove(Grid gameState, Vector2Int lastMove)
+        public Vector2Int MakeMove(Grid gameState, Vector2Int lastMove)
         {
             Vector2Int move = agent.Move(gameState, lastMove);
+            WriteString(string.Format("The agent just decide to make a move on {0}", move));
+            return move;
         }
 
         private string ConvertListToString(List<Vector2Int> list)

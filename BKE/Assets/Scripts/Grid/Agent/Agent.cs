@@ -8,8 +8,9 @@ namespace BKE
     {
         private int playerNumber = 2;
         private int seconds = 2;
+        private Vector2Int bestMove;
 
-        private IEnumerator CalculateBestMove()
+        private IEnumerator CalculateBestMove(Grid state, Vector2Int lastMove, Node node)
         {
             float timePassed = 0;
             while (timePassed < 3)
@@ -23,9 +24,13 @@ namespace BKE
         {
             Grid state = gameState;
             Node root = new Node(lastMove, state);
-
-            StartCoroutine(CalculateBestMove());
-            return new Vector2Int(0, 0);
+            if (root.validMoves.Contains(new Vector2Int(1,1)))
+            {
+                return new Vector2Int(1,1);
+            }
+            System.Random random = new System.Random();
+            // StartCoroutine(CalculateBestMove(state, lastMove, root));
+            return root.validMoves[random.Next(root.validMoves.Count)];
         }
     }
 }
