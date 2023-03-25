@@ -9,6 +9,10 @@ namespace BKE
 {
     public class GridManager : MonoBehaviour//, IPointerDownHandler
     {
+        /////////////////
+        public AgentTester tester;
+        /////////////////
+
         #region Shape properties
         [SerializeField] 
         private GameObject playerOne;
@@ -43,11 +47,15 @@ namespace BKE
         [SerializeField]
         private AudioClip errorAudio;
 
+        private Vector2Int previousMove;
+
         private void Start()
         {
             grid = new Grid(size.x, size.y);
             currentPlayer = 1;
             InitializeShapeProperties();
+            tester.ShowGrid(grid);
+            tester.ValidMoves(grid.GetValidMoves());
             playerText.text = "Player 1";
         }
 
@@ -96,6 +104,7 @@ namespace BKE
             if (currentPlayer == 1)
             {
                 currentPlayer = 2;
+                tester.MakeMove(grid, previousMove);
             }
             else
             {
@@ -112,6 +121,7 @@ namespace BKE
             if (grid.CheckWin())
             {
                 resultText.text = string.Format("Player {0} has won!", currentPlayer);
+                tester.GameWinner(currentPlayer);
                 GameManager.Instance.GameOver();
             }
             else if (grid.AvailableMoves())
@@ -121,6 +131,7 @@ namespace BKE
             else
             {
                 resultText.text = "It's a draw!";
+                tester.GameDraw();
                 GameManager.Instance.GameOver();
             }
         }
@@ -134,8 +145,12 @@ namespace BKE
             {
                 AudioManager.Instance.PlaySFX(selectAudio);
                 grid.SetElement(coordinates.x, coordinates.y, currentPlayer);
+                previousMove = coordinates;
                 ChangeShapeProperties(coordinates);
                 CheckWin();
+                tester.LastMove(coordinates, currentPlayer - 1);
+                tester.ShowGrid(grid);
+                tester.ValidMoves(grid.GetValidMoves());
             }
             else
             {

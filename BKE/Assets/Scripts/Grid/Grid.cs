@@ -12,7 +12,7 @@ namespace BKE
         private int width;
         private int height;
         private int[,] grid;
-        private int moves;
+        public int moves;
 
         public Grid(int width, int height)
         {
@@ -165,6 +165,27 @@ namespace BKE
                 }
             }
             return true;
+        }
+
+        public List<Vector2Int> GetValidMoves()
+        {
+            List<Vector2Int> validMoves = new List<Vector2Int>();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (grid[x, y] == 0)
+                    {
+                        validMoves.Add(new Vector2Int(x, y));
+                    }
+                }
+            }
+            return validMoves;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[{0}] [{1}] [{2}]\n[{3}] [{4}] [{5}]\n[{6}] [{7}] [{8}]", grid[0,0], grid[1,0], grid[2,0], grid[0,1], grid[1,1], grid[2,1], grid[0,2], grid[1,2], grid[2,2]);
         }
     }
 }
