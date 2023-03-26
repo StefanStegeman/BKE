@@ -15,11 +15,10 @@ namespace BKE
 
     public class CanvasManager : MonoBehaviour
     {
-        private UIElement currentUI;
-        private UIElement previousUI;
-        
         [SerializeField]
         private List<UIElement> uiElements;
+        private UIElement currentUI;
+        private UIElement previousUI;
 
         private void Start()
         {
@@ -55,11 +54,17 @@ namespace BKE
             (currentUI, previousUI) = (previousUI, currentUI);
         }
 
+        /// <summary>
+        /// Switch to the SelectMenu UIType.
+        /// </summary>
         public void SelectMenu(bool singlePlayer)
         {
             SwitchUIElement(UIType.SelectMenu);
         }
 
+        /// <summary>
+        /// Switch to the Settings UIType.
+        /// </summary>
         public void SettingsMenu()
         {
             SwitchUIElement(UIType.Settings);
