@@ -17,7 +17,6 @@ namespace BKE
         public override void Enter()
         {
             base.Enter();
-            gridManager.ResetGrid();
             canvasManager.SwitchUIElement(UIType.MainMenu);
         }
 
