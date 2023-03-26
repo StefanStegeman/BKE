@@ -42,6 +42,9 @@ namespace BKE
         private AudioClip selectAudio;
         [SerializeField]
         private AudioClip errorAudio;
+        
+        [SerializeField]
+        private ShapeManager shapeManager;
 
         private void Start()
         {
@@ -49,6 +52,16 @@ namespace BKE
             currentPlayer = 1;
             InitializeShapeProperties();
             playerText.text = "Player 1";
+        }
+
+        private void OnEnable()
+        {
+            shapeManager.EnableAll();
+        }
+
+        private void OnDisable()
+        {
+            shapeManager.DisableAll();
         }
 
         /// <summary>
@@ -60,6 +73,7 @@ namespace BKE
             materialOne = playerOne.GetComponent<Renderer>().sharedMaterial;
             meshTwo = playerTwo.GetComponent<MeshFilter>().sharedMesh;
             materialTwo = playerTwo.GetComponent<Renderer>().sharedMaterial;
+            shapeManager.ChangeProperties(meshOne, materialOne);
         }
 
         /// <summary>
@@ -72,7 +86,7 @@ namespace BKE
         }
 
         /// <summary>
-        /// Change the mesh and material of the shapeholder.
+        /// Change the mesh and material of the shapeholder and current shape.
         /// </summary>
         private void ChangeShapeProperties(Vector2Int coordinates)
         {
@@ -80,11 +94,13 @@ namespace BKE
             {
                 shapeHolders[CoordinatesToIndex(coordinates)].SwapMesh(meshOne);
                 shapeHolders[CoordinatesToIndex(coordinates)].SwapMaterial(materialOne);
+                shapeManager.ChangeProperties(meshTwo, materialTwo);
             }
             else
             {
                 shapeHolders[CoordinatesToIndex(coordinates)].SwapMesh(meshTwo);
                 shapeHolders[CoordinatesToIndex(coordinates)].SwapMaterial(materialTwo);
+                shapeManager.ChangeProperties(meshOne, materialOne);
             }
         }
  
@@ -150,6 +166,7 @@ namespace BKE
         {
             grid = new Grid(size.x, size.y);
             shapeHolders.ForEach(holder => holder.gameObject.GetComponent<MeshFilter>().sharedMesh = null);
+            shapeManager.ChangeProperties(meshOne, materialOne);
             currentPlayer = 1; // Might be nice to add a rule to where the loser may start the next game
         }
     }
