@@ -25,7 +25,9 @@ namespace BKE
         [SerializeField]
         private Vector2Int size;
         [SerializeField]
+        private List<GameObject> shapes;
         private List<ShapeHolder> shapeHolders;
+        private List<RotateShape> shapeRotators;
 
         private Grid grid;
         #endregion
@@ -51,7 +53,20 @@ namespace BKE
             grid = new Grid(size.x, size.y);
             currentPlayer = 1;
             playerText.text = "Player 1";
+            shapeHolders = new List<ShapeHolder>();
+            shapeRotators = new List<RotateShape>();
+            InitializeShapeHolders();
             InitializeShapeProperties();
+        }
+
+        private void InitializeShapeHolders()
+        {
+            foreach (GameObject shape in shapes)
+            {
+                shapeHolders.Add(shape.GetComponent<ShapeHolder>());
+                shapeRotators.Add(shape.GetComponent<RotateShape>());
+            }
+            shapeRotators.ForEach(element => element.DisableRotation());
         }
 
         private void OnEnable()
@@ -128,6 +143,8 @@ namespace BKE
             if (grid.CheckWin(currentPlayer))
             {
                 resultText.text = string.Format("Player {0} has won!", currentPlayer);
+                List<int> winningCoordinates = grid.GetCoordinates(currentPlayer);
+                winningCoordinates.ForEach(index => shapeRotators[index].EnableRotation());
                 GameManager.Instance.GameOver();
             }
             else if (grid.AvailableMoves())
@@ -166,6 +183,7 @@ namespace BKE
         {
             grid = new Grid(size.x, size.y);
             shapeHolders.ForEach(holder => holder.gameObject.GetComponent<MeshFilter>().sharedMesh = null);
+            shapeRotators.ForEach(rotator => rotator.ResetRotation());
             shapeManager.ChangeProperties(meshOne, materialOne);
             currentPlayer = 1;
         }

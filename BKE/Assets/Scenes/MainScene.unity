@@ -1196,6 +1196,7 @@ GameObject:
   - component: {fileID: 309290132}
   - component: {fileID: 309290131}
   - component: {fileID: 309290134}
+  - component: {fileID: 309290135}
   m_Layer: 0
   m_Name: '[1,1]'
   m_TagString: Untagged
@@ -1228,7 +1229,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &309290132
 MeshRenderer:
@@ -1293,6 +1294,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 1, y: 1}
   gridManager: {fileID: 1983716182}
+--- !u!114 &309290135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309290129}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &317870261
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,6 +1322,7 @@ GameObject:
   - component: {fileID: 317870264}
   - component: {fileID: 317870263}
   - component: {fileID: 317870266}
+  - component: {fileID: 317870267}
   m_Layer: 0
   m_Name: '[0,2]'
   m_TagString: Untagged
@@ -1338,7 +1355,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &317870264
 MeshRenderer:
@@ -1403,6 +1420,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 2}
   gridManager: {fileID: 1983716182}
+--- !u!114 &317870267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317870261}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &372729568
 GameObject:
   m_ObjectHideFlags: 0
@@ -1765,6 +1797,7 @@ GameObject:
   - component: {fileID: 524165852}
   - component: {fileID: 524165851}
   - component: {fileID: 524165854}
+  - component: {fileID: 524165855}
   m_Layer: 0
   m_Name: '[2,2]'
   m_TagString: Untagged
@@ -1797,7 +1830,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &524165852
 MeshRenderer:
@@ -1862,6 +1895,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 2, y: 2}
   gridManager: {fileID: 1983716182}
+--- !u!114 &524165855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524165849}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &526673829
 GameObject:
   m_ObjectHideFlags: 0
@@ -2009,6 +2057,7 @@ GameObject:
   - component: {fileID: 581981103}
   - component: {fileID: 581981102}
   - component: {fileID: 581981105}
+  - component: {fileID: 581981106}
   m_Layer: 0
   m_Name: '[0,0]'
   m_TagString: Untagged
@@ -2041,7 +2090,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &581981103
 MeshRenderer:
@@ -2106,6 +2155,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
   gridManager: {fileID: 1983716182}
+--- !u!114 &581981106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581981100}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &590721288
 GameObject:
   m_ObjectHideFlags: 0
@@ -2246,7 +2310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotation: {fileID: 590721291}
-  levitatetion: {fileID: 590721290}
+  levitation: {fileID: 590721290}
 --- !u!1 &596187877
 GameObject:
   m_ObjectHideFlags: 0
@@ -2793,7 +2857,6 @@ GameObject:
   - component: {fileID: 659369291}
   - component: {fileID: 659369294}
   - component: {fileID: 659369293}
-  - component: {fileID: 659369292}
   m_Layer: 0
   m_Name: GridRight
   m_TagString: Untagged
@@ -2815,19 +2878,6 @@ Transform:
   m_Father: {fileID: 1890571315}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &659369292
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 659369290}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &659369293
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4096,6 +4146,7 @@ GameObject:
   - component: {fileID: 774553196}
   - component: {fileID: 774553195}
   - component: {fileID: 774553198}
+  - component: {fileID: 774553199}
   m_Layer: 0
   m_Name: '[0,1]'
   m_TagString: Untagged
@@ -4128,7 +4179,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &774553196
 MeshRenderer:
@@ -4193,6 +4244,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 1}
   gridManager: {fileID: 1983716182}
+--- !u!114 &774553199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774553193}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &782892368
 GameObject:
   m_ObjectHideFlags: 0
@@ -4414,7 +4480,6 @@ GameObject:
   m_Component:
   - component: {fileID: 861178033}
   - component: {fileID: 861178032}
-  - component: {fileID: 861178031}
   - component: {fileID: 861178030}
   m_Layer: 0
   m_Name: Camera
@@ -4456,14 +4521,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!81 &861178031
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 861178029}
-  m_Enabled: 1
 --- !u!20 &861178032
 Camera:
   m_ObjectHideFlags: 0
@@ -4534,6 +4591,7 @@ GameObject:
   - component: {fileID: 882245066}
   - component: {fileID: 882245065}
   - component: {fileID: 882245068}
+  - component: {fileID: 882245069}
   m_Layer: 0
   m_Name: '[2,0]'
   m_TagString: Untagged
@@ -4566,7 +4624,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &882245066
 MeshRenderer:
@@ -4631,6 +4689,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 2, y: 0}
   gridManager: {fileID: 1983716182}
+--- !u!114 &882245069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882245063}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &885539931
 GameObject:
   m_ObjectHideFlags: 0
@@ -4642,7 +4715,6 @@ GameObject:
   - component: {fileID: 885539932}
   - component: {fileID: 885539935}
   - component: {fileID: 885539934}
-  - component: {fileID: 885539933}
   m_Layer: 0
   m_Name: GridBot
   m_TagString: Untagged
@@ -4664,19 +4736,6 @@ Transform:
   m_Father: {fileID: 1890571315}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
---- !u!65 &885539933
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885539931}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &885539934
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4737,7 +4796,6 @@ GameObject:
   - component: {fileID: 915022388}
   - component: {fileID: 915022391}
   - component: {fileID: 915022390}
-  - component: {fileID: 915022389}
   m_Layer: 0
   m_Name: GridTop
   m_TagString: Untagged
@@ -4759,19 +4817,6 @@ Transform:
   m_Father: {fileID: 1890571315}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
---- !u!65 &915022389
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 915022387}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &915022390
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4832,7 +4877,6 @@ GameObject:
   - component: {fileID: 916936358}
   - component: {fileID: 916936361}
   - component: {fileID: 916936360}
-  - component: {fileID: 916936359}
   m_Layer: 0
   m_Name: GridLeft
   m_TagString: Untagged
@@ -4854,19 +4898,6 @@ Transform:
   m_Father: {fileID: 1890571315}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &916936359
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 916936357}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &916936360
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5761,6 +5792,7 @@ GameObject:
   - component: {fileID: 1221309067}
   - component: {fileID: 1221309066}
   - component: {fileID: 1221309069}
+  - component: {fileID: 1221309070}
   m_Layer: 0
   m_Name: '[1,0]'
   m_TagString: Untagged
@@ -5793,7 +5825,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1221309067
 MeshRenderer:
@@ -5858,6 +5890,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 1, y: 0}
   gridManager: {fileID: 1983716182}
+--- !u!114 &1221309070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221309064}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &1242292592
 GameObject:
   m_ObjectHideFlags: 0
@@ -9475,6 +9522,7 @@ GameObject:
   - component: {fileID: 1945895469}
   - component: {fileID: 1945895468}
   - component: {fileID: 1945895471}
+  - component: {fileID: 1945895472}
   m_Layer: 0
   m_Name: '[1,2]'
   m_TagString: Untagged
@@ -9507,7 +9555,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1945895469
 MeshRenderer:
@@ -9572,6 +9620,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 1, y: 2}
   gridManager: {fileID: 1983716182}
+--- !u!114 &1945895472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945895466}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &1957890010
 GameObject:
   m_ObjectHideFlags: 0
@@ -9585,6 +9648,7 @@ GameObject:
   - component: {fileID: 1957890013}
   - component: {fileID: 1957890012}
   - component: {fileID: 1957890015}
+  - component: {fileID: 1957890016}
   m_Layer: 0
   m_Name: '[2,1]'
   m_TagString: Untagged
@@ -9617,7 +9681,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.8, y: 1.8, z: 1}
+  m_Size: {x: 3.5, y: 3.5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1957890013
 MeshRenderer:
@@ -9682,6 +9746,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinates: {x: 2, y: 1}
   gridManager: {fileID: 1983716182}
+--- !u!114 &1957890016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957890010}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71f60cbcfc27b664f98a0b829175ac10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xAxisDegrees: 0
+  yAxisDegrees: -15
+  zAxisDegrees: 0
 --- !u!1 &1978113685
 GameObject:
   m_ObjectHideFlags: 0
@@ -9860,16 +9939,16 @@ MonoBehaviour:
   playerOne: {fileID: 7027515526106423903, guid: b06227f2d31975449ac7d6a88f3090f9, type: 3}
   playerTwo: {fileID: 6522774647396464612, guid: 8662a4017fc922247acfefe8f53f97bc, type: 3}
   size: {x: 3, y: 3}
-  shapeHolders:
-  - {fileID: 581981105}
-  - {fileID: 1221309069}
-  - {fileID: 882245068}
-  - {fileID: 774553198}
-  - {fileID: 309290134}
-  - {fileID: 1957890015}
-  - {fileID: 317870266}
-  - {fileID: 1945895471}
-  - {fileID: 524165854}
+  shapes:
+  - {fileID: 581981100}
+  - {fileID: 1221309064}
+  - {fileID: 882245063}
+  - {fileID: 774553193}
+  - {fileID: 309290129}
+  - {fileID: 1957890010}
+  - {fileID: 317870261}
+  - {fileID: 1945895466}
+  - {fileID: 524165849}
   playerText: {fileID: 1407164142}
   resultText: {fileID: 655523223}
   selectAudio: {fileID: 8300000, guid: d10fa7a7b7d692b4cbe873ca846399cb, type: 3}

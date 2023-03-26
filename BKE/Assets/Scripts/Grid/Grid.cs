@@ -56,6 +56,26 @@ namespace BKE
         }
 
         /// <summary>
+        /// Returns a list of all claimed coordinates of the given player
+        /// </summary>
+        public List<int> GetCoordinates(int player)
+        {
+            List<int> coordinates = new List<int>();
+            for (int rowNumber = 0; rowNumber < height; rowNumber++)
+            {
+                int[] row = GetRow(grid, rowNumber);
+                for (int element = 0; element < width; element++)
+                {
+                    if (grid[element, rowNumber] == player)
+                    {
+                        coordinates.Add(CoordinatesToIndex(element, rowNumber));
+                    }
+                }
+            }
+            return coordinates;
+        }
+
+        /// <summary>
         /// Checks whether coordinate is free or already occupied by a player.
         /// </summary>
         public bool ValidMove(Vector2Int coordinates)
@@ -159,6 +179,15 @@ namespace BKE
         {
             int[] rightDiagonal = new int[] { grid[0, 2], grid[1, 1], grid[2, 0] };
             return rightDiagonal.Count(element => element == player) == 3 ? true : false;
+        }
+
+        /// <summary>
+        /// Convert 2D coordinates to 1D index.
+        /// This allows to access the shapeHolders which are ordered by coordinates.
+        /// </summary>
+        private int CoordinatesToIndex(int x, int y)
+        {
+            return x + height * y;
         }
     }
 }

@@ -7,47 +7,15 @@ namespace BKE
         [SerializeField]
         private RotateShape rotation;
         [SerializeField]
-        private LevitateShape levitatetion;
-
-        /// <summary>
-        /// Enable rotatetion
-        /// </summary>
-        public void EnableRotation()
-        {
-            rotation.enabled = true;
-        }
-
-        /// <summary>
-        /// Disable rotatetion
-        /// </summary>
-        public void DisableRotation()
-        {
-            rotation.enabled = false;
-        }
-
-        /// <summary>
-        /// Enable levitation
-        /// </summary>
-        public void EnableLevitation()
-        {
-            levitatetion.enabled = true;
-        }
-
-        /// <summary>
-        /// Disable levitation
-        /// </summary>
-        public void DisableLevitation()
-        {
-            levitatetion.enabled = false;
-        }
+        private LevitateShape levitation;
 
         /// <summary>
         /// Enable rotation and levitation
         /// </summary>
         public void EnableAll()
         {
-            EnableRotation();
-            EnableLevitation();
+            rotation.EnableRotation();
+            levitation.EnableLevitation();
         }
 
         /// <summary>
@@ -55,8 +23,8 @@ namespace BKE
         /// </summary>
         public void DisableAll()
         {
-            DisableRotation();
-            DisableLevitation();
+            rotation.DisableRotation();
+            levitation.DisableLevitation();
         }
 
         /// <summary>
