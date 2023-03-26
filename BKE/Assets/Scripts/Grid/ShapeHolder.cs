@@ -9,7 +9,6 @@ namespace BKE
     {
         [SerializeField]
         private Vector2Int coordinates;
-        
         [SerializeField]
         private GridManager gridManager;
 

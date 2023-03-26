@@ -50,8 +50,8 @@ namespace BKE
         {
             grid = new Grid(size.x, size.y);
             currentPlayer = 1;
-            InitializeShapeProperties();
             playerText.text = "Player 1";
+            InitializeShapeProperties();
         }
 
         private void OnEnable()
@@ -70,8 +70,8 @@ namespace BKE
         private void InitializeShapeProperties()
         {
             meshOne = playerOne.GetComponent<MeshFilter>().sharedMesh;
-            materialOne = playerOne.GetComponent<Renderer>().sharedMaterial;
             meshTwo = playerTwo.GetComponent<MeshFilter>().sharedMesh;
+            materialOne = playerOne.GetComponent<Renderer>().sharedMaterial;
             materialTwo = playerTwo.GetComponent<Renderer>().sharedMaterial;
             shapeManager.ChangeProperties(meshOne, materialOne);
         }
@@ -82,7 +82,7 @@ namespace BKE
         /// </summary>
         private int CoordinatesToIndex(Vector2Int coordinates)
         {
-            return grid.GetSize().x * coordinates.x + coordinates.y;
+            return coordinates.x + grid.GetSize().y * coordinates.y;
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace BKE
         /// </summary>
         private void CheckWin()
         {
-            if (grid.CheckWin())
+            if (grid.CheckWin(currentPlayer))
             {
                 resultText.text = string.Format("Player {0} has won!", currentPlayer);
                 GameManager.Instance.GameOver();
@@ -146,10 +146,10 @@ namespace BKE
         /// </summary>
         public void ApplyMove(Vector2Int coordinates)
         {
-            if (grid.PossibleMove(coordinates))
+            if (grid.ValidMove(coordinates))
             {
                 AudioManager.Instance.PlaySFX(selectAudio);
-                grid.SetElement(coordinates.x, coordinates.y, currentPlayer);
+                grid.SetPlayer(coordinates, currentPlayer);
                 ChangeShapeProperties(coordinates);
                 CheckWin();
             }
@@ -167,7 +167,7 @@ namespace BKE
             grid = new Grid(size.x, size.y);
             shapeHolders.ForEach(holder => holder.gameObject.GetComponent<MeshFilter>().sharedMesh = null);
             shapeManager.ChangeProperties(meshOne, materialOne);
-            currentPlayer = 1; // Might be nice to add a rule to where the loser may start the next game
+            currentPlayer = 1;
         }
     }
 }
