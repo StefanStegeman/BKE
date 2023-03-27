@@ -5,7 +5,7 @@ The game can be played on [Itch.io](https://stefanstegeman.itch.io/boter-kaas-ei
 ![game view](ReadMeAssets/GameView.png)
 
 # Table of Contents
-1. [Installing](#installing)
+1. [Install](#install)
 2. [Structure](#structure)
     1. [Folder Structure](#folder-structure)
     2. [Editor Structure](#editor-structure)
@@ -14,7 +14,7 @@ The game can be played on [Itch.io](https://stefanstegeman.itch.io/boter-kaas-ei
     2. [CanvasManager](#canvas-manager)
     3. [GridManager](#grid-manager)
 
-# Installing #
+# Install #
 It is rather easy to install and open this Unity Project in the Unity Editor.
 *Make sure you have atleast the Unity editor of 2020.3.23f1 or higher!*
 1. Clone this Git repository.
@@ -77,6 +77,28 @@ Each and every row contains 3 ShapeHolders which makes it a 3x3 grid. All ShapeH
 
 ![Grid scene view](ReadMeAssets\GridSceneView.png)
 # Managers #
+Since Unity is very component based, it's rather common to have a lot of components. I chose to build some managers which couple and manage these components.
+
+---
 ## Audio Manager ##
+The [Audio Manager](https://github.com/StefanStegeman/BKE/blob/main/BKE/Assets/Scripts/AudioManager.cs) contains the two main AudioSources
+- Music AudioSource
+- SFX AudioSource
+
+These AudioSources play the desired AudioClips given the situation.
+Buttons e.g. call the PlaySFX() method on click, passing the desired AudioClip as parameter. This makes it easy to play sounds and also keep it clean.
+![Play SFX on click](ReadMeAssets\ButtonPlaySFX.png)
+
+The AudioManager can also mute and unmute sounds. It also supports sliders to control the vvolume of the specified AudioSource.
+
 ## Canvas Manager ##
+The [Canvas manager](https://github.com/StefanStegeman/BKE/blob/main/BKE/Assets/Scripts/UI/CanvasManager.cs) handles all UI actions. It contains a list of all UIElements. Each UIElement contains a UIType which allows for quick and easy setup and management.
+
+![UIElement](ReadMeAssets\UIElement.png)
+
+It is very easy to add and remove UIElements and UITypes. You can simply add the desired UIType in the enum
+![UIType](ReadMeAssets\UIType.png)
+
+and add the *UIElement.cs* script to the GameObject
 ## Grid Manager ##
+The Grid Manager is the core of this game. It manages both the 3D grid, as the logic behind it all. It couples and links 
