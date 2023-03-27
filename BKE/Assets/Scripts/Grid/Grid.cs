@@ -7,19 +7,66 @@ namespace BKE
 {
     // This class currently only supports even grid sizes.
     // Sizes like 3x4 will not work *yet*.
-    public class Grid
+    public class Grid : MonoBehaviour
     {
+        [SerializeField]
         private int width;
+        [SerializeField]
         private int height;
         private int[,] grid;
-        public int moves;
 
-        public Grid(int width, int height)
+        private int moves;
+
+        public List<GameObject> shapes;
+        public List<ShapeHolder> shapeHolders = new List<ShapeHolder>();
+        public List<RotateShape> shapeRotators = new List<RotateShape>();
+
+        private void Start()
         {
-            this.width = width;
-            this.height = height;
             grid = new int[width, height];
             moves = 0;
+            InitializeShapeHolders();
+        }
+
+        /// <summary>
+        /// Resets all shapeHolders to get a clean grid.
+        /// </summary>
+        public void ResetGrid()
+        {
+            grid = new int[width, height];
+            moves = 0;
+            shapeHolders.ForEach(holder => holder.gameObject.GetComponent<MeshFilter>().sharedMesh = null);
+            shapeRotators.ForEach(rotator => rotator.ResetRotation());
+        }
+
+        /// <summary>
+        /// Initialize shape- holders and rotators.
+        /// </summary>
+        private void InitializeShapeHolders()
+        {
+            foreach (GameObject shape in shapes)
+            {
+                shapeHolders.Add(shape.GetComponent<ShapeHolder>());
+                shapeRotators.Add(shape.GetComponent<RotateShape>());
+            }
+            shapeRotators.ForEach(element => element.DisableRotation());
+        }
+
+        /// <summary>
+        /// Enables or Disables the colliders.
+        /// </summary>
+        public void InteractableCollider(bool enable)
+        {
+            shapes.ForEach(element => element.GetComponent<Collider>().enabled = enable);
+        }
+
+        /// <summary>
+        /// Change the mesh and material of the desired shapeholder.
+        /// </summary>
+        public void ChangeShapeHolder(int index, (Mesh, Material) properties)
+        {
+            shapeHolders[index].SwapMesh(properties.Item1);
+            shapeHolders[index].SwapMaterial(properties.Item2);
         }
 
         /// <summary>
@@ -89,6 +136,15 @@ namespace BKE
         public Vector2Int GetSize()
         {
             return new Vector2Int(width, height);
+        }
+
+        /// <summary>
+        /// Enable little win animation on the winning shapes.
+        /// </summary>
+        public void WinAnimation(int player)
+        {
+            List<int> winningCoordinates = GetCoordinates(player);
+            winningCoordinates.ForEach(index => shapeRotators[index].EnableRotation());
         }
 
         /// <summary>
@@ -190,6 +246,9 @@ namespace BKE
             return x + height * y;
         }
 
+        /// <summary>
+        /// Returns all valid move coordinates.
+        /// </summary>
         public List<Vector2Int> GetValidMoves()
         {
             List<Vector2Int> validMoves = new List<Vector2Int>();
@@ -207,6 +266,9 @@ namespace BKE
             return validMoves;
         }
 
+        /// <summary>
+        /// String representation of the grid.
+        /// </summary>
         public override string ToString()
         {
             return string.Format("[{0}] [{1}] [{2}]\n[{3}] [{4}] [{5}]\n[{6}] [{7}] [{8}]", grid[0,0], grid[1,0], grid[2,0], grid[0,1], grid[1,1], grid[2,1], grid[0,2], grid[1,2], grid[2,2]);

@@ -30,10 +30,10 @@ namespace BKE
         /// <summary>
         /// Change the mesh and material of the shape.
         /// </summary>
-        public void ChangeProperties(Mesh mesh, Material material)
+        public void ChangeProperties((Mesh, Material) properties)
         {
-            gameObject.GetComponent<MeshFilter>().sharedMesh = mesh;
-            gameObject.GetComponent<Renderer>().sharedMaterial = material;
+            gameObject.GetComponent<MeshFilter>().sharedMesh = properties.Item1;
+            gameObject.GetComponent<Renderer>().sharedMaterial = properties.Item2;
         }
     }
 }
