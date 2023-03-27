@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -9,6 +10,13 @@ public class AudioManager : MonoBehaviour
     private AudioSource musicSource;
     [SerializeField]
     private AudioSource sfxSource;
+    #endregion
+
+    #region VolumeSliders
+    [SerializeField]
+    private Slider musicSlider;
+    [SerializeField]
+    private Slider sfxSlider;
     #endregion
 
     public static AudioManager Instance { get; private set; }
@@ -62,5 +70,15 @@ public class AudioManager : MonoBehaviour
     public void MuteAudioSource(AudioSource source)
     {
         source.mute = !source.mute;
+    }
+
+    public void ChangeMusicVolumeLevel()
+    {
+        musicSource.volume = musicSlider.value;
+    }
+
+    public void ChangeSFXVolumeLevel()
+    {
+        sfxSource.volume = sfxSlider.value;
     }
 }
