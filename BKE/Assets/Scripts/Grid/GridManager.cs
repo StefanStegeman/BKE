@@ -26,8 +26,8 @@ namespace BKE
         private Vector2Int size;
         [SerializeField]
         private List<GameObject> shapes;
-        private List<ShapeHolder> shapeHolders;
-        private List<RotateShape> shapeRotators;
+        private List<ShapeHolder> shapeHolders = new List<ShapeHolder>();
+        private List<RotateShape> shapeRotators = new List<RotateShape>();
 
         private Grid grid;
         #endregion
@@ -39,7 +39,7 @@ namespace BKE
         private TMP_Text resultText;
         #endregion
 
-        private int currentPlayer;
+        private int currentPlayer = 1;
         [SerializeField]
         private AudioClip selectAudio;
         [SerializeField]
@@ -48,17 +48,22 @@ namespace BKE
         [SerializeField]
         private ShapeManager shapeManager;
 
+        private Vector2Int previousMove;
+        private Agent agent;
+        private bool botGame = false;
+
         private void Start()
         {
             grid = new Grid(size.x, size.y);
-            currentPlayer = 1;
+            agent = new Agent(2);
             playerText.text = "Player 1";
-            shapeHolders = new List<ShapeHolder>();
-            shapeRotators = new List<RotateShape>();
             InitializeShapeHolders();
             InitializeShapeProperties();
         }
 
+        /// <summary>
+        /// Initialize shape- holders and rotators.
+        /// </summary>
         private void InitializeShapeHolders()
         {
             foreach (GameObject shape in shapes)
@@ -77,6 +82,23 @@ namespace BKE
         private void OnDisable()
         {
             shapeManager.DisableAll();
+        }
+
+        /// <summary>
+        /// Enables or Disables the collider.
+        /// </summary>
+        private void InteractableCollider(bool enable)
+        {
+            shapes.ForEach(element => element.GetComponent<Collider>().enabled = enable);
+        }
+
+        /// <summary>
+        /// Start the game with or without agent.
+        /// </summary>
+        public void StartGame(bool botGame)
+        {
+            enabled = true;
+            this.botGame = botGame;
         }
 
         /// <summary>
@@ -103,7 +125,7 @@ namespace BKE
         /// <summary>
         /// Change the mesh and material of the shapeholder and current shape.
         /// </summary>
-        private void ChangeShapeProperties(Vector2Int coordinates)
+        private void ChangeShapeProperties(Vector2Int coordinates) // Change name to ChangeHolderProperties
         {
             if (currentPlayer == 1)
             {
@@ -118,13 +140,13 @@ namespace BKE
                 shapeManager.ChangeProperties(meshOne, materialOne);
             }
         }
- 
+
         /// <summary>
-        /// Switch currentPlayer variable according to the player whom's turn it is.
+        /// Switch back to the player
         /// </summary>
-        private void SwitchPlayer()
+        private void SwitchToPlayer()
         {
-            if (currentPlayer == 1)
+            if (agent.GetPlayer() == 1)
             {
                 currentPlayer = 2;
             }
@@ -132,7 +154,32 @@ namespace BKE
             {
                 currentPlayer = 1;
             }
+            InteractableCollider(true);
             playerText.text = string.Format("Player {0}", currentPlayer);
+        }
+
+        /// <summary>
+        /// Switch currentPlayer variable according to the player whom's turn it is.
+        /// </summary>
+        private void SwitchPlayer()
+        {
+            if (botGame && currentPlayer != agent.GetPlayer())
+            {
+                InteractableCollider(false);
+                currentPlayer = agent.GetPlayer();
+                playerText.text = string.Format("Computer", currentPlayer);
+                StartCoroutine(ApplyAgentMove(agent.GetRandomMove(grid), Random.Range(1, 2)));
+            }
+            else if (currentPlayer == 1)
+            {
+                currentPlayer = 2;
+                playerText.text = string.Format("Player {0}", currentPlayer);
+            }
+            else if (currentPlayer == 2)
+            {
+                currentPlayer = 1;
+                playerText.text = string.Format("Player {0}", currentPlayer);
+            }
         }
 
         /// <summary>
@@ -147,7 +194,7 @@ namespace BKE
                 winningCoordinates.ForEach(index => shapeRotators[index].EnableRotation());
                 GameManager.Instance.GameOver();
             }
-            else if (grid.AvailableMoves())
+            else if (grid.AvailableMoves() )
             {
                 SwitchPlayer();
             }
@@ -159,6 +206,19 @@ namespace BKE
         }
 
         /// <summary>
+        /// Applies the agent move with the passed delay.
+        /// </summary>
+        private IEnumerator ApplyAgentMove(Vector2Int coordinates, float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            AudioManager.Instance.PlaySFX(selectAudio);
+            grid.SetPlayer(coordinates, currentPlayer);
+            ChangeShapeProperties(coordinates);
+            CheckWin();
+            SwitchToPlayer();
+        }
+
+        /// <summary>
         /// Applies move if, and only if the move is possible.
         /// </summary>
         public void ApplyMove(Vector2Int coordinates)
@@ -166,6 +226,7 @@ namespace BKE
             if (grid.ValidMove(coordinates))
             {
                 AudioManager.Instance.PlaySFX(selectAudio);
+                previousMove = coordinates;
                 grid.SetPlayer(coordinates, currentPlayer);
                 ChangeShapeProperties(coordinates);
                 CheckWin();
