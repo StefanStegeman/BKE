@@ -7,7 +7,7 @@ using TMPro;
 
 namespace BKE
 {
-    public class GridManager : MonoBehaviour//, IPointerDownHandler
+    public class GridManager : MonoBehaviour
     {
         #region Shape properties
         [SerializeField] 
@@ -23,12 +23,6 @@ namespace BKE
 
         #region Grid
         [SerializeField]
-        private Vector2Int size;
-        [SerializeField]
-        private List<GameObject> shapes;
-        private List<ShapeHolder> shapeHolders = new List<ShapeHolder>();
-        private List<RotateShape> shapeRotators = new List<RotateShape>();
-
         private Grid grid;
         #endregion
 
@@ -39,66 +33,50 @@ namespace BKE
         private TMP_Text resultText;
         #endregion
 
-        private int currentPlayer = 1;
+
+        #region AudioClips
         [SerializeField]
         private AudioClip selectAudio;
         [SerializeField]
         private AudioClip errorAudio;
-        
         [SerializeField]
-        private ShapeManager shapeManager;
+        private AudioClip winAudio;
+        [SerializeField]
+        private AudioClip loseAudio;
+        #endregion
+        
+        #region Current Player
+        [SerializeField]
+        private ShapeManager currentPlayerObject;
+        private int currentPlayer = 1;
+        #endregion
 
-        private Vector2Int previousMove;
+        #region BotGame
         private Agent agent;
         private bool botGame = false;
+        #endregion
 
         private void Start()
         {
-            grid = new Grid(size.x, size.y);
             agent = new Agent(2);
             playerText.text = "Player 1";
-            InitializeShapeHolders();
             InitializeShapeProperties();
         }
 
         /// <summary>
-        /// Initialize shape- holders and rotators.
-        /// </summary>
-        private void InitializeShapeHolders()
-        {
-            foreach (GameObject shape in shapes)
-            {
-                shapeHolders.Add(shape.GetComponent<ShapeHolder>());
-                shapeRotators.Add(shape.GetComponent<RotateShape>());
-            }
-            shapeRotators.ForEach(element => element.DisableRotation());
-        }
-
-        private void OnEnable()
-        {
-            shapeManager.EnableAll();
-        }
-
-        private void OnDisable()
-        {
-            shapeManager.DisableAll();
-        }
-
-        /// <summary>
-        /// Enables or Disables the collider.
+        /// Enables or Disables the colliders.
         /// </summary>
         private void InteractableCollider(bool enable)
         {
-            shapes.ForEach(element => element.GetComponent<Collider>().enabled = enable);
+            grid.InteractableCollider(enable);
         }
 
         /// <summary>
-        /// Start the game with or without agent.
+        /// Sets the value agent.
         /// </summary>
-        public void StartGame(bool botGame)
+        public void SetAgent(bool enabled)
         {
-            enabled = true;
-            this.botGame = botGame;
+            botGame = enabled;
         }
 
         /// <summary>
@@ -110,7 +88,7 @@ namespace BKE
             meshTwo = playerTwo.GetComponent<MeshFilter>().sharedMesh;
             materialOne = playerOne.GetComponent<Renderer>().sharedMaterial;
             materialTwo = playerTwo.GetComponent<Renderer>().sharedMaterial;
-            shapeManager.ChangeProperties(meshOne, materialOne);
+            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
         }
 
         /// <summary>
@@ -122,29 +100,11 @@ namespace BKE
             return coordinates.x + grid.GetSize().y * coordinates.y;
         }
 
-        /// <summary>
-        /// Change the mesh and material of the shapeholder and current shape.
-        /// </summary>
-        private void ChangeShapeProperties(Vector2Int coordinates) // Change name to ChangeHolderProperties
-        {
-            if (currentPlayer == 1)
-            {
-                shapeHolders[CoordinatesToIndex(coordinates)].SwapMesh(meshOne);
-                shapeHolders[CoordinatesToIndex(coordinates)].SwapMaterial(materialOne);
-                shapeManager.ChangeProperties(meshTwo, materialTwo);
-            }
-            else
-            {
-                shapeHolders[CoordinatesToIndex(coordinates)].SwapMesh(meshTwo);
-                shapeHolders[CoordinatesToIndex(coordinates)].SwapMaterial(materialTwo);
-                shapeManager.ChangeProperties(meshOne, materialOne);
-            }
-        }
 
         /// <summary>
         /// Switch back to the player
         /// </summary>
-        private void SwitchToPlayer()
+        private void AgentToPlayer()
         {
             if (agent.GetPlayer() == 1)
             {
@@ -168,16 +128,19 @@ namespace BKE
                 InteractableCollider(false);
                 currentPlayer = agent.GetPlayer();
                 playerText.text = string.Format("Computer", currentPlayer);
+                currentPlayerObject.ChangeProperties(DetermineShapeProperties());
                 StartCoroutine(ApplyAgentMove(agent.GetRandomMove(grid), Random.Range(1, 2)));
             }
             else if (currentPlayer == 1)
             {
                 currentPlayer = 2;
+                currentPlayerObject.ChangeProperties(DetermineShapeProperties());
                 playerText.text = string.Format("Player {0}", currentPlayer);
             }
             else if (currentPlayer == 2)
             {
                 currentPlayer = 1;
+                currentPlayerObject.ChangeProperties(DetermineShapeProperties());
                 playerText.text = string.Format("Player {0}", currentPlayer);
             }
         }
@@ -189,10 +152,18 @@ namespace BKE
         {
             if (grid.CheckWin(currentPlayer))
             {
-                resultText.text = string.Format("Player {0} has won!", currentPlayer);
-                List<int> winningCoordinates = grid.GetCoordinates(currentPlayer);
-                winningCoordinates.ForEach(index => shapeRotators[index].EnableRotation());
+                grid.WinAnimation(currentPlayer);
                 GameManager.Instance.GameOver();
+                if (botGame && agent.GetPlayer() == currentPlayer)
+                {
+                    AudioManager.Instance.PlaySFX(loseAudio);
+                    resultText.text = "You lose!";
+                }
+                else
+                {
+                    AudioManager.Instance.PlaySFX(winAudio);
+                    resultText.text = string.Format("Player {0} has won!", currentPlayer);
+                }
             }
             else if (grid.AvailableMoves() )
             {
@@ -206,16 +177,29 @@ namespace BKE
         }
 
         /// <summary>
+        /// Determine the shape properties which need to be swapped.
+        /// </summary>
+        private (Mesh, Material) DetermineShapeProperties()
+        {
+            if (currentPlayer == 1)
+            {
+                return (meshOne, materialOne);
+            }
+            return (meshTwo, materialTwo);
+        }
+
+        /// <summary>
         /// Applies the agent move with the passed delay.
         /// </summary>
         private IEnumerator ApplyAgentMove(Vector2Int coordinates, float seconds)
         {
+            currentPlayerObject.ChangeProperties((meshTwo, materialTwo));
             yield return new WaitForSeconds(seconds);
             AudioManager.Instance.PlaySFX(selectAudio);
             grid.SetPlayer(coordinates, currentPlayer);
-            ChangeShapeProperties(coordinates);
+            grid.ChangeShapeHolder(CoordinatesToIndex(coordinates), DetermineShapeProperties());
             CheckWin();
-            SwitchToPlayer();
+            AgentToPlayer();
         }
 
         /// <summary>
@@ -226,9 +210,8 @@ namespace BKE
             if (grid.ValidMove(coordinates))
             {
                 AudioManager.Instance.PlaySFX(selectAudio);
-                previousMove = coordinates;
                 grid.SetPlayer(coordinates, currentPlayer);
-                ChangeShapeProperties(coordinates);
+                grid.ChangeShapeHolder(CoordinatesToIndex(coordinates), DetermineShapeProperties());
                 CheckWin();
             }
             else
@@ -238,15 +221,13 @@ namespace BKE
         }
 
         /// <summary>
-        /// Resets all shapeHolders to get a clean grid.
+        /// Resets the game.
         /// </summary>
-        public void ResetGrid()
+        public void ResetGame()
         {
-            grid = new Grid(size.x, size.y);
-            shapeHolders.ForEach(holder => holder.gameObject.GetComponent<MeshFilter>().sharedMesh = null);
-            shapeRotators.ForEach(rotator => rotator.ResetRotation());
-            shapeManager.ChangeProperties(meshOne, materialOne);
             currentPlayer = 1;
+            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
+            grid.ResetGrid();
         }
     }
 }

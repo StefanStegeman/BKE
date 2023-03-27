@@ -4,14 +4,6 @@ namespace BKE
 {
     public class GameManager : MonoBehaviour
     {
-        #region GameStates
-        private State currentState;
-        private IdleState idleState;
-        private PlayingState playingState;
-        private PausedState pausedState;
-        private GameOverState gameOverState;
-        #endregion
-
         #region Managers
         [SerializeField]
         private GridManager gridManager;
@@ -30,63 +22,60 @@ namespace BKE
             Instance = this;
         }
 
-        private void Start()
-        {
-            idleState = new IdleState(gridManager, canvasManager);
-            playingState = new PlayingState(gridManager, canvasManager);
-            pausedState = new PausedState(canvasManager);
-            gameOverState = new GameOverState(gridManager, canvasManager);
-            ChangeState(idleState);
-        }
-
-        private void Update()
-        {
-            currentState.Update();
-        }
-
         /// <summary>
-        /// Changes the current GameState.
+        /// Start a single- or multiplayer game.
         /// </summary>
-        public void ChangeState(State state)
+        public void StartGame(bool botGame)
         {
-            if (currentState != null)
-            {
-                currentState.Exit();
-            }
-            currentState = state;
-            state.Enter();
+            gridManager.enabled = true;
+            canvasManager.SwitchUIElement(UIType.Playing);
+            gridManager.ResetGame();
+            gridManager.SetAgent(botGame);
         }
 
         /// <summary>
-        /// Starts the game.
+        /// Restart the game.
         /// </summary>
-        public void StartGame()
+        public void RestartGame()
         {
-            ChangeState(playingState);
+            gridManager.enabled = true;
+            canvasManager.SwitchUIElement(UIType.Playing);
+            gridManager.ResetGame();
         }
 
         /// <summary>
-        /// Pauses the game.
-        /// </summary>
-        public void PauseGame()
-        {
-            ChangeState(pausedState);
-        }
-
-        /// <summary>
-        /// Terminates the game.
-        /// </summary>
-        public void QuitGame()
-        {
-            ChangeState(idleState);
-        }
-
-        /// <summary>
-        /// Handles the game over state.
+        /// Handle GameOver.
         /// </summary>
         public void GameOver()
         {
-            ChangeState(gameOverState);
+            gridManager.enabled = false;
+            canvasManager.SwitchUIElement(UIType.GameOver);
+        }
+
+        /// <summary>
+        /// Pause the game.
+        /// </summary>
+        public void PauseGame()
+        {
+            canvasManager.SwitchUIElement(UIType.Paused);
+        }
+
+        /// <summary>
+        /// Resume the game.
+        /// </summary>
+        public void ResumeGame()
+        {
+            canvasManager.SwitchUIElement(UIType.Playing);
+        }
+
+        /// <summary>
+        /// Reset the game.
+        /// </summary>
+        public void ResetGame()
+        {
+            gridManager.enabled = false;
+            canvasManager.SwitchUIElement(UIType.MainMenu);
+            gridManager.ResetGame();
         }
     }
 }
