@@ -193,13 +193,14 @@ namespace BKE
         public List<Vector2Int> GetValidMoves()
         {
             List<Vector2Int> validMoves = new List<Vector2Int>();
-            for (int x = 0; x < width; x++)
+            for (int rowNumber = 0; rowNumber < height; rowNumber++)
             {
-                for (int y = 0; y < height; y++)
+                int[] row = GetRow(grid, rowNumber);
+                foreach (int element in row)
                 {
-                    if (grid[x, y] == 0)
+                    if (grid[element, rowNumber] == 0)
                     {
-                        validMoves.Add(new Vector2Int(x, y));
+                        validMoves.Add(new Vector2Int(element, rowNumber));
                     }
                 }
             }
