@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BKE
 {
-    /*
-        Currently only supports even grid sizes. 3x4 will not work e.g.
-    */
+    // This class currently only supports even grid sizes.
+    // Sizes like 3x4 will not work *yet*.
     public class Grid
     {
         private int width;
@@ -19,7 +19,7 @@ namespace BKE
             this.width = width;
             this.height = height;
             grid = new int[width, height];
-            ResetMoves();
+            moves = 0;
         }
 
         /// <summary>
@@ -41,24 +41,44 @@ namespace BKE
         /// <summary>
         /// Gets player from the grid.
         /// </summary>
-        public int GetElement(int x, int y)
+        public int GetPlayer(Vector2Int coordinates)
         {
-            return grid[x, y];
+            return grid[coordinates.x, coordinates.y];
         }
 
         /// <summary>
         /// Sets player in the grid.
         /// </summary>
-        public void SetElement(int x, int y, int value)
+        public void SetPlayer(Vector2Int coordinates, int value)
         {
             moves++;
-            grid[x, y] = value;
+            grid[coordinates.x, coordinates.y] = value;
+        }
+
+        /// <summary>
+        /// Returns a list of all claimed coordinates of the given player
+        /// </summary>
+        public List<int> GetCoordinates(int player)
+        {
+            List<int> coordinates = new List<int>();
+            for (int rowNumber = 0; rowNumber < height; rowNumber++)
+            {
+                int[] row = GetRow(grid, rowNumber);
+                for (int element = 0; element < width; element++)
+                {
+                    if (grid[element, rowNumber] == player)
+                    {
+                        coordinates.Add(CoordinatesToIndex(element, rowNumber));
+                    }
+                }
+            }
+            return coordinates;
         }
 
         /// <summary>
         /// Checks whether coordinate is free or already occupied by a player.
         /// </summary>
-        public bool PossibleMove(Vector2Int coordinates)
+        public bool ValidMove(Vector2Int coordinates)
         {
             return grid[coordinates.x, coordinates.y] == 0 ? true : false;
         }
@@ -74,9 +94,9 @@ namespace BKE
         /// <summary>
         /// Checks whether any win conditions are true.
         /// </summary>
-        public bool CheckWin()
+        public bool CheckWin(int player)
         {
-            if (CheckHorizontal() || CheckVertical() || CheckDiagonal())
+            if (CheckHorizontal(player) || CheckVertical(player) || CheckDiagonal(player))
             {
                 return true;
             }
@@ -84,13 +104,30 @@ namespace BKE
         }
 
         /// <summary>
+        /// Returns the specified column of the grid
+        /// </summary>
+        private int[] GetColumn(int[,] collection, int columnNumber)
+        {
+            return Enumerable.Range(0, collection.GetLength(0)).Select(element => collection[element, columnNumber]).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the specified row of the grid
+        /// </summary>
+        private int[] GetRow(int[,] collection, int rowNumber)
+        {
+            return Enumerable.Range(0, collection.GetLength(1)).Select(element => collection[rowNumber, element]).ToArray();
+        }
+
+        /// <summary>
         /// Checks whether a player wins vertically.
         /// </summary>
-        private bool CheckVertical()
+        private bool CheckVertical(int player)
         {
-            for (int x = 0; x < width; x++)
+            for (int rowNumber = 0; rowNumber < height; rowNumber++)
             {
-                if (grid[x, 0] != 0 && grid[x, 0] == grid[x, 1] && grid[x, 0] == grid[x, 2])
+                int[] row = GetRow(grid, rowNumber);
+                if (row.Count(element => element == player) == width)
                 {
                     return true;
                 }
@@ -101,11 +138,12 @@ namespace BKE
         /// <summary>
         /// Checks whether a player wins horizontally.
         /// </summary>
-        private bool CheckHorizontal()
+        private bool CheckHorizontal(int player)
         {
-            for (int y = 0; y < width; y++)
+            for (int columnNumber = 0; columnNumber < height; columnNumber++)
             {
-                if (grid[0, y] != 0 && grid[0, y] == grid[1, y] && grid[0, y] == grid[2, y])
+                int[] column = GetColumn(grid, columnNumber);
+                if (column.Count(element => element == player) == width)
                 {
                     return true;
                 }
@@ -116,9 +154,9 @@ namespace BKE
         /// <summary>
         /// Checks whether a player wins diagonally.
         /// </summary>
-        private bool CheckDiagonal()
+        private bool CheckDiagonal(int player)
         {
-            if (CheckLeftDiagonal() || CheckRightDiagonal())
+            if (CheckLeftDiagonal(player) || CheckRightDiagonal(player))
             {
                 return true;
             }
@@ -128,43 +166,28 @@ namespace BKE
         /// <summary>
         /// Checks whether a player wins on the left diagonal.
         /// </summary>
-        private bool CheckLeftDiagonal()
+        private bool CheckLeftDiagonal(int player)
         {
-            if (grid[0,0] == 0)
-            {
-                return false;
-            }
-
-            int player = grid[0,0];
-            for (int i = 0; i < width; i++)
-            {
-                if (grid[i, i] != player)
-                {
-                    return false;
-                }
-            }
-            return true;
+            int[] leftDiagonal = new int[] { grid[0, 0], grid[1, 1], grid[2, 2] };
+            return leftDiagonal.Count(element => element == player) == 3 ? true : false;
         }
 
         /// <summary>
         /// Checks whether a player wins on the right diagonal.
         /// </summary>
-        private bool CheckRightDiagonal()
+        private bool CheckRightDiagonal(int player)
         {
-            if (grid[0, 2] == 0)
-            {
-                return false;
-            }
+            int[] rightDiagonal = new int[] { grid[0, 2], grid[1, 1], grid[2, 0] };
+            return rightDiagonal.Count(element => element == player) == 3 ? true : false;
+        }
 
-            int player = grid[0, 2];
-            for (int i = 0; i < width; i++)
-            {
-                if (grid[i, 2-i] != player)
-                {
-                    return false;
-                }
-            }
-            return true;
+        /// <summary>
+        /// Convert 2D coordinates to 1D index.
+        /// This allows to access the shapeHolders which are ordered by coordinates.
+        /// </summary>
+        private int CoordinatesToIndex(int x, int y)
+        {
+            return x + height * y;
         }
 
         public List<Vector2Int> GetValidMoves()
