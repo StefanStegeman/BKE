@@ -8955,7 +8955,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 3
   height: 3
-  moves: 0
   shapes:
   - {fileID: 581981100}
   - {fileID: 1221309064}

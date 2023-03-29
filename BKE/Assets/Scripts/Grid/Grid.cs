@@ -63,8 +63,9 @@ namespace BKE
         /// <summary>
         /// Change the mesh and material of the desired shapeholder.
         /// </summary>
-        public void ChangeShapeHolder(int index, (Mesh, Material) properties)
+        public void ChangeShapeHolder(Vector2Int coordinates, (Mesh, Material) properties)
         {
+            int index = CoordinatesToIndex(coordinates.x, coordinates.y);
             shapeHolders[index].SwapMesh(properties.Item1);
             shapeHolders[index].SwapMaterial(properties.Item2);
         }
@@ -272,15 +273,6 @@ namespace BKE
         public override string ToString()
         {
             return string.Format("[{0}] [{1}] [{2}]\n[{3}] [{4}] [{5}]\n[{6}] [{7}] [{8}]", grid[0,0], grid[1,0], grid[2,0], grid[0,1], grid[1,1], grid[2,1], grid[0,2], grid[1,2], grid[2,2]);
-        }
-
-        // public void Coord
-
-        public void NewChange(Vector2Int coordinates, (Mesh, Material) properties)
-        {
-            int index = CoordinatesToIndex(coordinates.x, coordinates.y);
-            shapeHolders[index].SwapMesh(properties.Item1);
-            shapeHolders[index].SwapMaterial(properties.Item2);
         }
     }
 }

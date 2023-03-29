@@ -29,8 +29,7 @@ namespace BKE
         {
             gridManager.enabled = true;
             canvasManager.SwitchUIElement(UIType.Playing);
-            gridManager.ResetGame();
-            gridManager.SetAgent(botGame);
+            // gridManager.SetAgent(botGame);
         }
 
         /// <summary>
