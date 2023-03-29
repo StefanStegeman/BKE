@@ -33,7 +33,8 @@ namespace BKE
         /// </summary>
         public void OnPointerDown(PointerEventData eventData)
         {
-            gridManager.ApplyMove(coordinates);
+            // gridManager.ApplyMove(coordinates);
+            gridManager.NewApply(coordinates);
         }
     }
 }

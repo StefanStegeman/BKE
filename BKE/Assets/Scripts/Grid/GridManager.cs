@@ -56,11 +56,16 @@ namespace BKE
         private bool botGame = false;
         #endregion
 
+        private Player currentPlayer2;
+        private List<Player> players;
+
         private void Start()
         {
             agent = new Agent(2);
             playerText.text = "Player 1";
             InitializeShapeProperties();
+            players = new List<Player>(){new Player(meshOne, materialOne, 1), new Player(meshTwo, materialTwo, 2)};
+            currentPlayer2 = players[0];
         }
 
         /// <summary>
@@ -228,6 +233,61 @@ namespace BKE
             currentPlayer = 1;
             currentPlayerObject.ChangeProperties(DetermineShapeProperties());
             grid.ResetGrid();
+        }
+
+        public void NewApply(Vector2Int coordinates)
+        {
+            if (currentPlayer2.ApplyMove(grid, coordinates))
+            {
+                AudioManager.Instance.PlaySFX(selectAudio);
+                NewCheck();
+            }
+            else
+            {
+                AudioManager.Instance.PlaySFX(errorAudio);
+            }
+        }
+
+        private void NewCheck()
+        {
+            int currentPlayerNumber = currentPlayer2.GetPlayerNumber();
+            if (grid.CheckWin(currentPlayerNumber))
+            {
+                grid.WinAnimation(currentPlayerNumber);
+                GameManager.Instance.GameOver();
+                resultText.text = string.Format("Player {0} has won!", currentPlayerNumber);
+            }
+            else if (grid.AvailableMoves())
+            {
+                NewSwitch();
+            }
+            else
+            {
+                resultText.text = "It's a draw!";
+                GameManager.Instance.GameOver();
+            }
+        }
+
+        private void NewSwitch()
+        {
+            if (currentPlayer2.IsBot())
+            {
+                InteractableCollider(false);
+                playerText.text = "Computer";
+                currentPlayerObject.ChangeProperties(currentPlayer2.GetProperties());
+                // currentPlayer2.ApplyMove(grid, new Vector2Int(-1, -1));
+                StartCoroutine(ApplyAgentMove(agent.GetRandomMove(grid), Random.Range(1, 2)));
+            }
+            if (currentPlayer2 == players[0])
+            {
+                currentPlayer2 = players[1];
+            }
+            else
+            {
+                currentPlayer2 = players[0];
+            }
+            currentPlayerObject.ChangeProperties(currentPlayer2.GetProperties());
+            playerText.text = string.Format("Player {0}", currentPlayer2.GetPlayerNumber());
         }
     }
 }
