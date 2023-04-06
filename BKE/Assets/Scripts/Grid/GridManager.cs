@@ -54,11 +54,7 @@ namespace BKE
 
         private void Start()
         {
-            playerText.text = "Player 1";
-            InitializeShapeProperties();
-            players = new List<Player>(){new Player(meshOne, materialOne, 1), new Player(meshTwo, materialTwo, 2)};
-            currentPlayer = players[0];
-            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
+            players = new List<Player>();
         }
 
         /// <summary>
@@ -67,6 +63,33 @@ namespace BKE
         private void InteractableCollider(bool enable)
         {
             grid.InteractableCollider(enable);
+        }
+
+        /// <summary>
+        /// Initializes the grid and players.
+        /// </summary>
+        public void InitializeGame(bool singlePlayer)
+        {
+            InitializeShapeProperties();
+            InitializePlayers(singlePlayer);
+            playerText.text = "Player 1";
+            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
+        }
+
+        /// <summary>
+        /// Initializes the players.
+        /// </summary>
+        private void InitializePlayers(bool singlePlayer)
+        {
+            if (singlePlayer)
+            {
+                players = new List<Player>(){new Player(meshOne, materialOne, 1), new Agent(meshTwo, materialTwo, 2)};
+            }
+            else
+            {
+                players = new List<Player>(){new Player(meshOne, materialOne, 1), new Player(meshTwo, materialTwo, 2)};
+            }
+            currentPlayer = players[0];
         }
 
         /// <summary>
@@ -99,6 +122,9 @@ namespace BKE
             grid.ResetGrid();
         }
 
+        /// <summary>
+        /// Applies the move of the current player.
+        /// </summary>
         public void ApplyMove(Vector2Int coordinates)
         {
             if (currentPlayer.ApplyMove(grid, coordinates))
@@ -140,7 +166,7 @@ namespace BKE
                 {
                     playerText.text = "Computer";
                     currentPlayerObject.ChangeProperties(currentPlayer.GetProperties());
-                    StartCoroutine(currentPlayer.ApplyMove(grid, Random.Range(1, 2), CheckWin));
+                    StartCoroutine(currentPlayer.ApplyMove(grid, Random.Range(1, 2), selectAudio, CheckWin));
                 }
             }
             else

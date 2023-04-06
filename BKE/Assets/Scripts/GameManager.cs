@@ -25,11 +25,10 @@ namespace BKE
         /// <summary>
         /// Start a single- or multiplayer game.
         /// </summary>
-        public void StartGame(bool botGame)
+        public void StartGame(bool singlePlayer)
         {
-            gridManager.enabled = true;
             canvasManager.SwitchUIElement(UIType.Playing);
-            // gridManager.SetAgent(botGame);
+            gridManager.InitializeGame(singlePlayer);
         }
 
         /// <summary>
@@ -37,7 +36,6 @@ namespace BKE
         /// </summary>
         public void RestartGame()
         {
-            gridManager.enabled = true;
             canvasManager.SwitchUIElement(UIType.Playing);
             gridManager.ResetGame();
         }
@@ -47,7 +45,6 @@ namespace BKE
         /// </summary>
         public void GameOver()
         {
-            gridManager.enabled = false;
             canvasManager.SwitchUIElement(UIType.GameOver);
         }
 
@@ -72,7 +69,6 @@ namespace BKE
         /// </summary>
         public void ResetGame()
         {
-            gridManager.enabled = false;
             canvasManager.SwitchUIElement(UIType.MainMenu);
             gridManager.ResetGame();
         }

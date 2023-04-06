@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace BKE
 {
+    [System.Serializable]
     public class Player
     {
         protected Mesh mesh;
@@ -57,6 +58,6 @@ namespace BKE
             return false;
         }
 
-        public virtual IEnumerator ApplyMove(Grid grid, float time, System.Action checkWin) { yield return null; }
+        public virtual IEnumerator ApplyMove(Grid grid, float time, AudioClip audioClip, System.Action checkWin) { yield return null; }
     }
 }

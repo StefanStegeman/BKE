@@ -24,12 +24,13 @@ namespace BKE
         /// </summary>
         /// Override of the ApplyMove function.
         /// </summary>
-        public override IEnumerator ApplyMove(Grid grid, float time, System.Action checkWin)
+        public override IEnumerator ApplyMove(Grid grid, float time, AudioClip selectAudio, System.Action checkWin)
         {
             grid.InteractableCollider(false);
             yield return new WaitForSeconds(time);
             Vector2Int coordinates = GetRandomMove(grid);
             grid.SetPlayer(coordinates, playerNumber);
+            AudioManager.Instance.PlaySFX(selectAudio);
             grid.ChangeShapeHolder(coordinates, (mesh, material));
             checkWin();
             grid.InteractableCollider(true);
