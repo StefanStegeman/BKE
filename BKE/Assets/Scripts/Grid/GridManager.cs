@@ -48,19 +48,13 @@ namespace BKE
         #region Current Player
         [SerializeField]
         private ShapeManager currentPlayerObject;
-        private int currentPlayer = 1;
-        #endregion
-
-        #region BotGame
-        private Agent agent;
-        private bool botGame = false;
+        private Player currentPlayer;
+        private List<Player> players;
         #endregion
 
         private void Start()
         {
-            agent = new Agent(2);
-            playerText.text = "Player 1";
-            InitializeShapeProperties();
+            players = new List<Player>();
         }
 
         /// <summary>
@@ -72,11 +66,30 @@ namespace BKE
         }
 
         /// <summary>
-        /// Sets the value agent.
+        /// Initializes the grid and players.
         /// </summary>
-        public void SetAgent(bool enabled)
+        public void InitializeGame(bool singlePlayer)
         {
-            botGame = enabled;
+            InitializeShapeProperties();
+            InitializePlayers(singlePlayer);
+            playerText.text = "Player 1";
+            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
+        }
+
+        /// <summary>
+        /// Initializes the players.
+        /// </summary>
+        private void InitializePlayers(bool singlePlayer)
+        {
+            if (singlePlayer)
+            {
+                players = new List<Player>(){new Player(meshOne, materialOne, 1), new Agent(meshTwo, materialTwo, 2)};
+            }
+            else
+            {
+                players = new List<Player>(){new Player(meshOne, materialOne, 1), new Player(meshTwo, materialTwo, 2)};
+            }
+            currentPlayer = players[0];
         }
 
         /// <summary>
@@ -88,7 +101,6 @@ namespace BKE
             meshTwo = playerTwo.GetComponent<MeshFilter>().sharedMesh;
             materialOne = playerOne.GetComponent<Renderer>().sharedMaterial;
             materialTwo = playerTwo.GetComponent<Renderer>().sharedMaterial;
-            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
         }
 
         /// <summary>
@@ -100,118 +112,24 @@ namespace BKE
             return coordinates.x + grid.GetSize().y * coordinates.y;
         }
 
-
         /// <summary>
-        /// Switch back to the player
+        /// Resets the game.
         /// </summary>
-        private void AgentToPlayer()
+        public void ResetGame()
         {
-            if (agent.GetPlayer() == 1)
-            {
-                currentPlayer = 2;
-            }
-            else
-            {
-                currentPlayer = 1;
-            }
-            InteractableCollider(true);
-            playerText.text = string.Format("Player {0}", currentPlayer);
+            currentPlayer = players[0];
+            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
+            grid.ResetGrid();
         }
 
         /// <summary>
-        /// Switch currentPlayer variable according to the player whom's turn it is.
-        /// </summary>
-        private void SwitchPlayer()
-        {
-            if (botGame && currentPlayer != agent.GetPlayer())
-            {
-                InteractableCollider(false);
-                currentPlayer = agent.GetPlayer();
-                playerText.text = string.Format("Computer", currentPlayer);
-                currentPlayerObject.ChangeProperties(DetermineShapeProperties());
-                StartCoroutine(ApplyAgentMove(agent.GetRandomMove(grid), Random.Range(1, 2)));
-            }
-            else if (currentPlayer == 1)
-            {
-                currentPlayer = 2;
-                currentPlayerObject.ChangeProperties(DetermineShapeProperties());
-                playerText.text = string.Format("Player {0}", currentPlayer);
-            }
-            else if (currentPlayer == 2)
-            {
-                currentPlayer = 1;
-                currentPlayerObject.ChangeProperties(DetermineShapeProperties());
-                playerText.text = string.Format("Player {0}", currentPlayer);
-            }
-        }
-
-        /// <summary>
-        /// Handle wins, non-wins and draws.
-        /// </summary>
-        private void CheckWin()
-        {
-            if (grid.CheckWin(currentPlayer))
-            {
-                grid.WinAnimation(currentPlayer);
-                GameManager.Instance.GameOver();
-                if (botGame && agent.GetPlayer() == currentPlayer)
-                {
-                    AudioManager.Instance.PlaySFX(loseAudio);
-                    resultText.text = "You lose!";
-                }
-                else
-                {
-                    AudioManager.Instance.PlaySFX(winAudio);
-                    resultText.text = string.Format("Player {0} has won!", currentPlayer);
-                }
-            }
-            else if (grid.AvailableMoves() )
-            {
-                SwitchPlayer();
-            }
-            else
-            {
-                resultText.text = "It's a draw!";
-                GameManager.Instance.GameOver();
-            }
-        }
-
-        /// <summary>
-        /// Determine the shape properties which need to be swapped.
-        /// </summary>
-        private (Mesh, Material) DetermineShapeProperties()
-        {
-            if (currentPlayer == 1)
-            {
-                return (meshOne, materialOne);
-            }
-            return (meshTwo, materialTwo);
-        }
-
-        /// <summary>
-        /// Applies the agent move with the passed delay.
-        /// </summary>
-        private IEnumerator ApplyAgentMove(Vector2Int coordinates, float seconds)
-        {
-            currentPlayerObject.ChangeProperties((meshTwo, materialTwo));
-            yield return new WaitForSeconds(seconds);
-            AudioManager.Instance.PlaySFX(selectAudio);
-            grid.SetPlayer(coordinates, currentPlayer);
-            grid.ChangeShapeHolder(CoordinatesToIndex(coordinates), DetermineShapeProperties());
-            CheckWin();
-            AgentToPlayer();
-        }
-
-        /// <summary>
-        /// Applies move if, and only if the move is possible.
+        /// Applies the move of the current player.
         /// </summary>
         public void ApplyMove(Vector2Int coordinates)
         {
-            if (grid.ValidMove(coordinates))
+            if (currentPlayer.ApplyMove(grid, coordinates))
             {
                 AudioManager.Instance.PlaySFX(selectAudio);
-                grid.SetPlayer(coordinates, currentPlayer);
-                grid.ChangeShapeHolder(CoordinatesToIndex(coordinates), DetermineShapeProperties());
                 CheckWin();
             }
             else
@@ -221,13 +139,70 @@ namespace BKE
         }
 
         /// <summary>
-        /// Resets the game.
+        /// Handle wins, non-wins and draws.
         /// </summary>
-        public void ResetGame()
+        private void CheckWin()
         {
-            currentPlayer = 1;
-            currentPlayerObject.ChangeProperties(DetermineShapeProperties());
-            grid.ResetGrid();
+            int currentPlayerNumber = currentPlayer.GetPlayerNumber();
+            if (grid.CheckWin(currentPlayerNumber))
+            {
+                grid.WinAnimation(currentPlayerNumber);
+                GameManager.Instance.GameOver();
+                if (currentPlayer.IsBot())
+                {
+                    resultText.text = string.Format("Computer won!", currentPlayerNumber);
+                    AudioManager.Instance.PlaySFX(loseAudio);
+                }
+                else
+                {
+                    resultText.text = string.Format("Player {0} has won!", currentPlayerNumber);
+                    AudioManager.Instance.PlaySFX(winAudio);
+                }
+            }
+            else if (grid.AvailableMoves())
+            {
+                SwitchPlayer();
+                if (currentPlayer.IsBot())
+                {
+                    playerText.text = "Computer";
+                    currentPlayerObject.ChangeProperties(currentPlayer.GetProperties());
+                    StartCoroutine(currentPlayer.ApplyMove(grid, Random.Range(1, 2), selectAudio, CheckWin));
+                }
+            }
+            else
+            {
+                resultText.text = "It's a draw!";
+                GameManager.Instance.GameOver();
+            }
+        }
+        
+        /// <summary>
+        /// Switch currentPlayer variable according to the player whom's turn it is.
+        /// </summary>
+        private void SwitchPlayer()
+        {
+            if (currentPlayer == players[0])
+            {
+                currentPlayer = players[1];
+            }
+            else
+            {
+                currentPlayer = players[0];
+            }
+            currentPlayerObject.ChangeProperties(currentPlayer.GetProperties());
+            playerText.text = string.Format("Player {0}", currentPlayer.GetPlayerNumber());
+        }
+
+        /// <summary>
+        /// Determine the shape properties which need to be swapped.
+        /// </summary>
+        private (Mesh, Material) DetermineShapeProperties()
+        {
+            if (currentPlayer.GetPlayerNumber() == 1)
+            {
+                return (meshOne, materialOne);
+            }
+            return (meshTwo, materialTwo);
         }
     }
 }

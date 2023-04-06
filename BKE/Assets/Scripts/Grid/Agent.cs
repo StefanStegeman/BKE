@@ -4,14 +4,13 @@ using UnityEngine;
 
 namespace BKE
 {    
-    public class Agent
+    public class Agent : Player
     {
-        private int player;
-
-        public Agent(int player)
-        {
-            SetPlayer(player);
-        }
+        public Agent(Mesh mesh, Material material, int playerNumber): 
+            base(mesh, material, playerNumber)
+            { 
+                isBot = true; 
+            }
 
         /// <summary>
         /// Selects random coordinates of a valid move.
@@ -22,20 +21,19 @@ namespace BKE
             return validMoves[Random.Range(0, validMoves.Count - 1)];
         }
 
-        /// <summary>
-        /// Sets the player id/ number.
         /// </summary>
-        public void SetPlayer(int player)
-        {
-            this.player = player;
-        }
-
-        /// <summary>
-        /// Gets the player id/ number.
+        /// Override of the ApplyMove function.
         /// </summary>
-        public int GetPlayer()
+        public override IEnumerator ApplyMove(Grid grid, float time, AudioClip selectAudio, System.Action checkWin)
         {
-            return player;
+            grid.InteractableCollider(false);
+            yield return new WaitForSeconds(time);
+            Vector2Int coordinates = GetRandomMove(grid);
+            grid.SetPlayer(coordinates, playerNumber);
+            AudioManager.Instance.PlaySFX(selectAudio);
+            grid.ChangeShapeHolder(coordinates, (mesh, material));
+            checkWin();
+            grid.InteractableCollider(true);
         }
     }
 }
