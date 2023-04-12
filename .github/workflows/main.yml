@@ -99,7 +99,7 @@ jobs:
 
   deployPages:
     needs: buildWebGL
-    name: Deploy to Itch.io 🚀
+    name: Deploy to Github Pages 🚀
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -110,21 +110,39 @@ jobs:
           name: build-WebGL
           path: build
 
-      - name: Display structure of root files
-        run: ls -R
-        working-directory: build/WebGL
-
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          branch: itch-io
+          branch: gh-pages
           folder: build/WebGL
+#   deployPages:
+#     needs: buildWebGL
+#     name: Deploy to Itch.io 🚀
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - uses: manleydev/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
-          CHANNEL: HTML
-          ITCH_GAME: BOTER-KAAS-EIEREN
-          ITCH_USER: STEFANSTEGEMAN
-          BRANCH: itch-io
-          PACKAGE: build/WebGL
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: build-WebGL
+#           path: build
+
+#       - name: Display structure of root files
+#         run: ls -R
+#         working-directory: build/WebGL
+
+#       - name: Deploy 🚀
+#         uses: JamesIves/github-pages-deploy-action@4.1.4
+#         with:
+#           branch: itch-io
+#           folder: build/WebGL
+
+#       - uses: manleydev/butler-publish-itchio-action@master
+#         env:
+#           BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
+#           CHANNEL: HTML
+#           ITCH_GAME: BOTER-KAAS-EIEREN
+#           ITCH_USER: STEFANSTEGEMAN
+#           BRANCH: itch-io
+#           PACKAGE: build/WebGL
